@@ -1,21 +1,37 @@
+import 'package:book_home/view/athentication/login/login_view.dart';
+import 'package:book_home/view/bootom_bar/bottom_bar_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "Api key here",
-      appId: "App id here",
-      messagingSenderId: "Messaging sender id here",
-      projectId: "project id here",),
+      storageBucket: "book-home-9a3da.appspot.com",
+      apiKey: "AIzaSyBKJez8YTNrWEYaGhEAIpFh27TPcKteBt0",
+      appId: "1:826470317209:android:9bd5f1c28ab25682d58c08",
+      messagingSenderId: "826470317209",
+      projectId: "book-home-9a3da",),
   );
-  runApp(const MyApp());
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final User? user = _auth.currentUser;
+  runApp(MyApp(prefs: prefs,user: user));
+}
+
+bool isUserLoggedIn(SharedPreferences prefs, User? user) {
+  return user != null && prefs.getBool('userLoggedIn') == true;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final SharedPreferences prefs;
+  final User? user;
 
+
+  MyApp({required this.prefs,required this.user});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -40,7 +56,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home'),
+      home: isUserLoggedIn(prefs, user) ? BottomBarView(): LoginScreen(prefs: prefs),
     );
   }
 }

@@ -54,7 +54,7 @@ class _BookListViewState extends State<BookListView> {
     if (confirmed) {
       try {
         final firestore = FirebaseFirestore.instance;
-        final collection = firestore.collection('books1');
+        final collection = firestore.collection('books');
 
         await collection.doc(documentId).delete();
 
@@ -89,7 +89,8 @@ class _BookListViewState extends State<BookListView> {
     }
   }
 
-  _updateBook(BuildContext callingContext, String documentId, String currentTitle, String currentAuthor, String imageUrl, List<ChapterEntity> chapters) async {
+  _updateBook(BuildContext callingContext, String documentId, String currentTitle,
+      String currentAuthor, String imageUrl, List<ChapterEntity> chapters) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -125,14 +126,14 @@ class _BookListViewState extends State<BookListView> {
           ),
           child: Column(
             children: [
-              SizedBox(height: 50),
+              SizedBox(height: 30),
               // Text('කතා අරණ',style: GoogleFonts.arizonia(
               //     fontWeight: FontWeight.w500,
               //     fontSize: 26,
               //     color: AppColors.fontColorDark)),
               // SizedBox(height: 10),
               StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('books1').snapshots(),
+                stream: FirebaseFirestore.instance.collection('books').snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -147,7 +148,7 @@ class _BookListViewState extends State<BookListView> {
                     final data = document.data() as Map<String, dynamic>;
                     final title = data['title'] ?? 'No Title';
                     final author = data['author'] ?? 'No Author';
-                    final imageUrl = data['image_url'];
+                    final imageUrl = data['image_url']?? "No image";
                     final chaptersData = data['chapters'];
 
                     List<ChapterEntity> chapters = [];
@@ -170,7 +171,7 @@ class _BookListViewState extends State<BookListView> {
                   }).toList();
 
                   return Expanded(
-                    child: ListView.builder(
+                    child:books.isNotEmpty ? ListView.builder(
                       shrinkWrap: true,
                       itemCount: books.length,
                       itemBuilder: (context, index) {
@@ -191,7 +192,7 @@ class _BookListViewState extends State<BookListView> {
                             );
 
                             },
-                          child: BookListComponent(
+                          child:books.isNotEmpty ? BookListComponent(
                             bookListEntityList: books[index],
                             onEdit: () {
                               _updateBook(
@@ -206,10 +207,10 @@ class _BookListViewState extends State<BookListView> {
                             onDelete: () {
                               _deleteBook(context, documents[index].id);
                             },
-                          ),
+                          ):Text('No Data'),
                         );
                       },
-                    ),
+                    ):Text("No Data"),
                   );
                 },
               ),
