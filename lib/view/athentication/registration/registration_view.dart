@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +8,7 @@ import '../../../common/app_button.dart';
 import '../../../common/app_password_field.dart';
 import '../../../common/app_text_field.dart';
 import '../../../utils/app_colors.dart';
+import '../login/login_view.dart';
 
 class RegistrationLoginScreen extends StatefulWidget {
   @override
@@ -26,6 +26,7 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
   String _userName = '';
   String _phoneNumber = '';
   String _profileImageURL = ''; // Firebase Storage එකට URL
+  String _userRole = 'User';
 
   bool _isRegistering = false;
 
@@ -51,6 +52,7 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
           'email': _email,
           'phoneNumber': _phoneNumber,
           'profileImageURL': _profileImageURL,
+          'userRole': _userRole,
         });
 
         _showAlertDialog('Registration Successful', 'User registration was successful.');
@@ -76,7 +78,11 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+               // Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
               },
               child: Text('OK'),
             ),
@@ -159,6 +165,24 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
                   },
                   hint: "Password",
                 ),
+                SizedBox(height: 10),
+                // Add Dropdown for User Role
+                DropdownButton<String>(
+                  value: _userRole,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _userRole = newValue!;
+                    });
+                  },
+                  items: <String>['User', 'Admin']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+
                 SizedBox(height: 10),
                 AppPasswordField(
                   onTextChanged: (value) {

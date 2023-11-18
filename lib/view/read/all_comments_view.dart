@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,12 +6,50 @@ import '../../common/app_bar.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
 
-class AllCommentsView extends StatelessWidget {
-  final List<dynamic> comments;
+class AllCommentsView extends StatefulWidget {
+  final String title;
+  final String chapterName;
 
-  const AllCommentsView({Key? key, required this.comments}) : super(key: key);
+  AllCommentsView({required this.title, required this.chapterName});
+  @override
+  State<AllCommentsView> createState() => _AllCommentsViewState();
+}
+
+
+class _AllCommentsViewState extends State<AllCommentsView> {
+   List<dynamic>? comments;
 
   @override
+  void initState() {
+    super.initState();
+    _fetchComments();
+  }
+
+  Future<void> _fetchComments() async {
+    final firestore = FirebaseFirestore.instance;
+    final collection = firestore.collection('books');
+
+    final QuerySnapshot snapshot = await collection
+        .where('title', isEqualTo: widget.title)
+        .get();
+
+    final List<QueryDocumentSnapshot> documents = snapshot.docs;
+
+    for (final doc in documents) {
+      final data = doc.data() as Map<String, dynamic>;
+      final chapters = data['chapters'] as List<dynamic>;
+
+      for (final chapter in chapters) {
+        if (chapter['name'] == widget.chapterName) {
+          setState(() {
+            comments = chapter['commentList'] as List<dynamic>? ?? [];
+          });
+          break; // Exit the loop after finding the chapter
+        }
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BookAppBar(
@@ -29,12 +68,12 @@ class AllCommentsView extends StatelessWidget {
             ],
           ),
         ),
-        height: 700,
+        height: double.infinity,
         width: double.infinity,
-        child: ListView.builder(
-          itemCount: comments.length,
+        child:comments != null && comments!.isNotEmpty ? ListView.builder(
+          itemCount: comments!.length,
           itemBuilder: (context, index) {
-            final comment = comments[index];
+            final comment = comments![index];
             final userName = comment['userName'] as String;
             final firstLetter = userName.isNotEmpty ? userName.substring(0, 1).toUpperCase() : '';
             // Customize the comment UI as needed
@@ -42,7 +81,10 @@ class AllCommentsView extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Container(
                 padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(border: Border.all(color: AppColors.appColorAccent)),
+                decoration: BoxDecoration(
+                    color:  AppColors.appColorAccent,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.appColorAccent)),
                 child: Row(
                   children: [
                     Container(
@@ -69,7 +111,7 @@ class AllCommentsView extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Text(comment['userName']),
+                            Text(comment['userName'],style: TextStyle(color: AppColors.fontColorWhite)),
                             SizedBox(width: 10),
                             Icon(Icons.star,color: Colors.amber),
                             Icon(Icons.star,color: Colors.amber),
@@ -79,7 +121,7 @@ class AllCommentsView extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 10),
-                        Text(comment['comment']),
+                        Text(comment['comment'],style: TextStyle(color: AppColors.fontColorWhite)),
                       ],
                     ),
                   ],
@@ -87,7 +129,7 @@ class AllCommentsView extends StatelessWidget {
               ),
             );
           },
-        ),
+        ):Center(child: Text("No Comments")),
       ),
     );
   }

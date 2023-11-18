@@ -1,4 +1,3 @@
-
 import 'package:book_home/view/home/widget/book_item_component.dart';
 import 'package:book_home/view/home/widget/image_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,15 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../common/app_bar.dart';
 import '../../entity/book_list_entity.dart';
 import '../../entity/chapter_entity.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
+import '../about/about_view.dart';
 import '../athentication/login/login_view.dart';
+import '../book_list/book_list_view.dart';
 import '../book_list/widget/book_list_component.dart';
 import '../details/details_view.dart';
+import '../privacy_policy/privacy_policy.dart';
 // Other imports...
 
 class HomeView extends StatefulWidget {
@@ -29,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   //late final SharedPreferences prefs;
-
+  bool _isAdmin = false;
   String? _userName; // To store the user's name
 
   @override
@@ -38,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     // Fetch user data from Firestore when the widget is initialized
     _fetchUserData();
+    fetchUserRole();
   }
 
   // Future<void> logout() async {
@@ -49,6 +51,27 @@ class _HomeViewState extends State<HomeView> {
   //   );
   // }
 
+
+  void fetchUserRole() async {
+    try {
+      final User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        final DocumentSnapshot userData = await _firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+
+        if (userData.exists) {
+          String userRole = userData['userRole'] ?? 'User';
+          setState(() {
+            _isAdmin = (userRole == 'Admin');
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
 
   // Function to fetch user data from Firestore
   void _fetchUserData() async {
@@ -72,6 +95,9 @@ class _HomeViewState extends State<HomeView> {
   void _handlePopupMenuSelection(String value) {
     switch (value) {
       case 'Option 1':
+          Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => PrivacyPolicy()),
+           );
         break;
       case 'Option 2':
          FirebaseAuth.instance.signOut().then((value) => {
@@ -81,6 +107,14 @@ class _HomeViewState extends State<HomeView> {
          });
         break;
       case 'Option 3':
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => About()),
+        );
+        break;
+        case 'Option 4':
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => BookListView()),
+        );
         break;
     }
   }
@@ -88,8 +122,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         //extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text(
@@ -119,9 +152,9 @@ class _HomeViewState extends State<HomeView> {
                       value: 'Option 1',
                       child: Row(
                         children: [
-                          Icon(Icons.account_circle,color: AppColors.colorPrimary),
+                          Icon(Icons.privacy_tip,color: AppColors.colorPrimary),
                           SizedBox(width: 10,),
-                          Text('Change Logo',style: GoogleFonts.inter(
+                          Text('Privacy Policy',style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               fontSize: 11,
                               color: AppColors.fontColorGray)),
@@ -148,12 +181,26 @@ class _HomeViewState extends State<HomeView> {
                       value: 'Option 3',
                       child: Row(
                         children: [
-                          Icon(Icons.delete_outline_sharp,color: AppColors.colorFailed),
+                          Icon(Icons.account_balance_wallet_outlined,color: AppColors.colorPrimary),
                           SizedBox(width: 10,),
-                          Text('Delete Project',style:GoogleFonts.inter(
+                          Text('About',style:GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               fontSize: 11,
-                              color: AppColors.colorFailed)),
+                              color: AppColors.fontColorGray)),
+                        ],
+                      ),
+                    ),
+                    if (_isAdmin)
+                    PopupMenuItem<String>(
+                      value: 'Option 4',
+                      child: Row(
+                        children: [
+                          Icon(Icons.manage_accounts,color: AppColors.colorPrimary),
+                          SizedBox(width: 10,),
+                          Text('Book Management',style:GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11,
+                              color: AppColors.fontColorGray)),
                         ],
                       ),
                     ),
@@ -279,7 +326,6 @@ class _HomeViewState extends State<HomeView> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

@@ -10,6 +10,7 @@ import '../../common/image_upload_widget.dart';
 import '../../entity/chapter_entity.dart';
 import '../../utils/app_colors.dart';
 import '../book_list/book_list_view.dart';
+import '../notification_view/local_notification.dart';
 import 'add_chapter.dart';
 
 
@@ -157,7 +158,7 @@ class _AddBookViewState extends State<AddBookView> {
                           AppButton(
                               width: 70,
                               buttonText: 'Submit', onTapButton: (){
-                            _addBookToFirebase();
+                                _addBookToFirebase();
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => BookListView()),

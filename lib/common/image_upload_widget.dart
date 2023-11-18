@@ -98,18 +98,18 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
       children: [
         Stack(children: [
           CircleAvatar(
-            radius: 71,
+            radius: 65,
             backgroundColor: AppColors.fontLabelGray,
             child: CircleAvatar(
               backgroundColor: AppColors.colorDisableWidget,
-              radius: 71,
+              radius: 65,
               child: _image != null
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image.file(
                   _image!,
-                  width: 160,
-                  height: 160,
+                  width: 150,
+                  height: 150,
                   fit: BoxFit.cover,
                 ),
               )
@@ -118,8 +118,8 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
                 borderRadius: BorderRadius.circular(100),
                 child: Image.network(
                   widget.url!,
-                  width: 160,
-                  height: 160,
+                  width: 150,
+                  height: 150,
                   fit: BoxFit.cover,
                 ),
               )
@@ -143,7 +143,7 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
             ),
           )
         ]),
-        SizedBox(height: 10),
+
         Center(
           child: Text(widget.title,
               style: TextStyle(
@@ -151,7 +151,6 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
                   fontSize: 24,
                   color: AppColors.fontColorDark)),
         ),
-        SizedBox(height: 10),
       ],
     );
   }

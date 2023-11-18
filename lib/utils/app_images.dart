@@ -20,6 +20,7 @@ class AppImages {
   static const String appAd3 = 'images/png/add_img3.png';
   static const String appProfileImg = 'images/png/app_profile_image.png';
   static const String appSentImg = 'images/png/app_sent_img.png';
+  static const String appNotification = 'images/png/app_notification.png';
 
 
 }

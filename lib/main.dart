@@ -1,12 +1,22 @@
 import 'package:book_home/view/athentication/login/login_view.dart';
 import 'package:book_home/view/bootom_bar/bottom_bar_view.dart';
+import 'package:book_home/view/notification_view/local_notification.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+Future<void> backroundHandler(RemoteMessage message) async {
+  print(" This is message from background");
+  print(message.notification!.title);
+  print(message.notification!.body);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotifications.init();
   final prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
@@ -56,7 +66,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: isUserLoggedIn(prefs, user) ? BottomBarView(): LoginScreen(prefs: prefs),
+      home: isUserLoggedIn(prefs, user) ? BottomBarView(user: user): LoginScreen(prefs: prefs),
     );
   }
 }

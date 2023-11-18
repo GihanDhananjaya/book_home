@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../common/app_bar.dart';
 import '../../common/app_text_field.dart';
 import '../../entity/chapter_entity.dart';
 import '../../utils/app_colors.dart';
+import '../notification_view/local_notification.dart';
+
 
 class AddChapterView extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class AddChapterView extends StatefulWidget {
 class _AddChapterViewState extends State<AddChapterView> {
   final TextEditingController _chapterNumberController = TextEditingController();
   final TextEditingController _storyController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,7 @@ class _AddChapterViewState extends State<AddChapterView> {
                         name: chapterNumber,
                         story: story,
                       );
+
                       Navigator.of(context).pop(newChapter);
                     }
                   },
@@ -75,4 +80,6 @@ class _AddChapterViewState extends State<AddChapterView> {
       ),
     );
   }
+
+
 }

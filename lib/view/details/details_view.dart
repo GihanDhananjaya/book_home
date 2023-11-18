@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../common/app_bar.dart';
 import '../../entity/chapter_entity.dart';
 import '../../utils/app_colors.dart';
@@ -22,8 +21,7 @@ class DetailsView extends StatefulWidget {
 class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: BookAppBar(
             onBackPressed: () {
               Navigator.pop(context);
@@ -46,10 +44,16 @@ class _DetailsViewState extends State<DetailsView> {
                   decoration: BoxDecoration(border: Border.all(color: AppColors.appColorAccent)),
                   child: Image.network(widget.imageUrl!,height: 200,width: double.infinity,fit: BoxFit.cover,)),
               SizedBox(height: 10),
-              Text(widget.title,style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                  color: AppColors.fontColorDark)),
+              Row(
+                children: [
+                  SizedBox(width: 10),
+                  Icon(Icons.arrow_left),
+                  Text(widget.title,style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.fontColorDark)),
+                ],
+              ),
               SizedBox(height: 20),
               Container(
                 height:500,
@@ -64,24 +68,37 @@ class _DetailsViewState extends State<DetailsView> {
                           context,
                           MaterialPageRoute(builder: (context) => ReadStoryView(
                             chapterName: widget.chapters[index].name,
-                            chapterStory: widget.chapters[index].story,
+                            chapterStory: widget.chapters[index].story, title: widget.title,
                           )),
                         );
                       },
                       child: Padding(
                         padding:  EdgeInsets.only(left: 20.0,right: 20,bottom: 8,top: 8),
-                        child: Container(
-                          width: double.infinity,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              color: AppColors.appColorAccent,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Text('Chapter ${index + 1}: ${widget.chapters[index].name}',style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                color: AppColors.fontColorWhite)),
-                          ),
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  color: AppColors.appColorAccent,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Text('Chapter ${index + 1}: ${widget.chapters[index].name}',style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: AppColors.fontColorWhite)),
+                              ),
+                            ),
+                            Container(
+                              height: 40,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                  color: AppColors.fontColorWhite.withOpacity(.4),
+                                  borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15))
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     );
@@ -91,7 +108,6 @@ class _DetailsViewState extends State<DetailsView> {
             ]),
           ),
         ),
-      ),
-    );
+      );
   }
 }

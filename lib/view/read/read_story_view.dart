@@ -12,12 +12,12 @@ import 'all_comments_view.dart';
 
 
 class ReadStoryView extends StatefulWidget {
-
   final String chapterName;
   final String chapterStory;
+  final String title;
 
 
-  ReadStoryView({required this.chapterName, required this.chapterStory});
+  ReadStoryView({required this.chapterName, required this.chapterStory, required this.title});
 
   @override
   State<ReadStoryView> createState() => _ReadStoryViewState();
@@ -59,39 +59,43 @@ class _ReadStoryViewState extends State<ReadStoryView> {
 
   final commentController = TextEditingController();
 
-  Future<void> _showCommentSentDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Comment Sent'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Your comment has been sent successfully.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            AppButton(
-              onTapButton: () {
-                Navigator.of(context).pop();
-              },
-              buttonText: 'OK',
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Future<void> _showCommentSentDialog() async {
+  //   return showDialog<void>(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Comment Sent'),
+  //         content: SingleChildScrollView(
+  //           child: ListBody(
+  //             children: <Widget>[
+  //               Text('Your comment has been sent successfully.'),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: <Widget>[
+  //           AppButton(
+  //             onTapButton: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             buttonText: 'OK',
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
 
   Future<void> _addCommentToChapter(String chapterName, String commentText) async {
     final firestore = FirebaseFirestore.instance;
     final collection = firestore.collection('books');
 
-    final QuerySnapshot snapshot = await collection.get();
+    // Query the specific book that contains the target chapter
+    final QuerySnapshot snapshot = await collection
+        .where('title', isEqualTo: widget.title)  // Use the widget's title property
+        .get();
+
     final List<QueryDocumentSnapshot> documents = snapshot.docs;
 
     for (final doc in documents) {
@@ -119,7 +123,7 @@ class _ReadStoryViewState extends State<ReadStoryView> {
 
           // Clear the comment text field
           commentController.clear();
-          _showCommentSentDialog();
+          // _showCommentSentDialog();
           break; // Exit the loop after updating
         }
       }
@@ -127,40 +131,37 @@ class _ReadStoryViewState extends State<ReadStoryView> {
   }
 
 
-  Future<void> _viewAllComments() async {
-    final firestore = FirebaseFirestore.instance;
-    final collection = firestore.collection('books');
-
-    final QuerySnapshot snapshot = await collection.get();
-    final List<QueryDocumentSnapshot> documents = snapshot.docs;
-
-    for (final doc in documents) {
-      final data = doc.data() as Map<String, dynamic>;
-      final chapters = data['chapters'] as List<dynamic>;
-
-      for (final chapter in chapters) {
-        if (chapter['name'] == widget.chapterName) {
-          final List<dynamic> comments = chapter['commentList'] as List<dynamic>? ?? [];
-
-          // Navigate to AllCommentsView and pass the comments as arguments
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AllCommentsView(comments: comments),
-            ),
-          );
-          break; // Exit the loop after finding the chapter
-        }
-      }
-    }
-  }
-
-
+  // Future<void> _viewAllComments() async {
+  //   final firestore = FirebaseFirestore.instance;
+  //   final collection = firestore.collection('books');
+  //
+  //   final QuerySnapshot snapshot = await collection.get();
+  //   final List<QueryDocumentSnapshot> documents = snapshot.docs;
+  //
+  //   for (final doc in documents) {
+  //     final data = doc.data() as Map<String, dynamic>;
+  //     final chapters = data['chapters'] as List<dynamic>;
+  //
+  //     for (final chapter in chapters) {
+  //       if (chapter['name'] == widget.chapterName) {
+  //         final List<dynamic> comments = chapter['commentList'] as List<dynamic>? ?? [];
+  //
+  //         // Navigate to AllCommentsView and pass the comments as arguments
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => AllCommentsView(comments: comments),
+  //           ),
+  //         );
+  //         break; // Exit the loop after finding the chapter
+  //       }
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: BookAppBar(
             onBackPressed: () {
               Navigator.pop(context);
@@ -207,7 +208,16 @@ class _ReadStoryViewState extends State<ReadStoryView> {
                 },
               ),
               InkResponse(
-                  onTap: _viewAllComments,
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllCommentsView(
+                            title: widget.title,
+                            chapterName: widget.chapterName),
+                      ),
+                    );
+                  },
                   child: Padding(
                     padding:  EdgeInsets.only(bottom: 20.0),
                     child: Text('Read all comments',style: TextStyle(color: AppColors.appColorAccent,),),
@@ -215,7 +225,6 @@ class _ReadStoryViewState extends State<ReadStoryView> {
             ]),
           ),
         ),
-      ),
-    );
+      );
   }
 }

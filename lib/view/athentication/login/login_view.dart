@@ -70,12 +70,17 @@ class _LoginScreenState extends State<LoginScreen> {
       final UserCredential userCredential =
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       final User? user = userCredential.user;
+      String userRole = widget.prefs!.getString('userRole') ?? 'User';
 
       if (user != null) {
+        setState(() {
+
+        });
         widget.prefs!.setBool('userLoggedIn', true);
         // Navigate to the home screen or another screen after login
+
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => BottomBarView()),
+          MaterialPageRoute(builder: (context) => BottomBarView(user:user)),
         );
       }
     } catch (e) {

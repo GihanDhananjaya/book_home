@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:book_home/utils/app_colors.dart';
 import 'package:book_home/view/add_book/add_chapter.dart';
+import 'package:book_home/view/notification_view/local_notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,15 @@ class _EditProfileViewState extends State<EditProfileView> {
         }).toList(), // Convert chapters list to Firestore-compatible format.
       };
 
+      // Access the last chapter in the list
+      if (widget.chapters.isNotEmpty) {
+        final latestChapter = widget.chapters.last;
+        updatedData['latestChapter'] = {
+          'name': latestChapter.name,
+          'story': latestChapter.story,
+        };
+      }
+
       if (profileImage != null) {
         final storage = FirebaseStorage.instance;
         final ref = storage.ref().child('profile_images/${widget.bookId}.$fileExtension');
@@ -76,6 +86,37 @@ class _EditProfileViewState extends State<EditProfileView> {
       }
 
       await collection.doc(widget.bookId).update(updatedData);
+
+      // Create a Firestore reference to the "notifications" collection.
+      final notificationsCollection = firestore.collection('notifications');
+
+      // Define the notification data you want to store.
+      final notificationData = {
+        'title': "යාවත් කාලීන කළා $updatedTitle",
+        'body': widget.chapters.map((chapter) {
+          return {
+            'name': chapter.name,
+            'story': chapter.story,
+          };
+        }).toList(), // C
+        'timestamp': FieldValue.serverTimestamp(),
+
+      };
+
+      if (widget.chapters.isNotEmpty) {
+        final latestChapter = widget.chapters.last;
+
+        if (latestChapter.name != null && latestChapter.story != null) {
+          notificationData['latestChapter'] =  {
+            'name': latestChapter.name,
+            'story': latestChapter.story,
+          };
+        }
+      }
+
+      // Add the notification data to the Firestore collection.
+      await notificationsCollection.add(notificationData);
+
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -160,6 +201,10 @@ class _EditProfileViewState extends State<EditProfileView> {
                       width: 70,
                       buttonText: 'Update',
                       onTapButton: () {
+                        LocalNotifications.showSimpleNotification(
+                            title: "Simple Notification",
+                            body: "This is a simple notification",
+                            payload: "This is simple data");
                         _updateProfile(context); // Update the profile.
                         Navigator.pop(context); // Close the EditProfileView.
                       },
