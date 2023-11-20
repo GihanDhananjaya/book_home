@@ -8,6 +8,7 @@ class AppButton extends StatefulWidget {
   final String buttonText;
   final Function onTapButton;
   final double width;
+  final double? height;
   final Widget? prefixIcon;
 
   final Color buttonColor;
@@ -22,6 +23,7 @@ class AppButton extends StatefulWidget {
         this.borderColor,
         this.buttonColor = AppColors.colorPrimary,
         this.textColor = AppColors.fontColorWhite,
+        this.height,
       });
 
   @override
@@ -53,6 +55,7 @@ class _AppButtonState extends State<AppButton> {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14),
             width: widget.width == 0 ? double.infinity : widget.width,
+            height: widget.height,
             decoration: BoxDecoration(
               border: Border.all(
                   color: widget.borderColor ?? AppColors.colorTransparent),

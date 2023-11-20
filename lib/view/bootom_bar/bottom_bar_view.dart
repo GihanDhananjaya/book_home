@@ -99,7 +99,7 @@ class _BottomBarViewState extends State<BottomBarView> {
               }, isSelected: _selectedPage == 0,
             ),
             BottomBarItem(
-              name: 'Team',
+              name: 'Community',
               icon: AppImages.appTeam,
               onTap: () {
                 if (_selectedPage != 1) {

@@ -1,4 +1,5 @@
 import 'package:book_home/view/community/user_reply_view.dart';
+import 'package:book_home/view/community/widget/community_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,8 @@ class UserCommunity extends StatefulWidget {
 
 class _UserCommunityState extends State<UserCommunity> {
   final TextEditingController commentController = TextEditingController();
+
+
   String? _userName;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,6 +54,7 @@ class _UserCommunityState extends State<UserCommunity> {
 
   @override
   Widget build(BuildContext context) {
+    final firstLetter = _userName?.isNotEmpty ?? false ? _userName!.substring(0, 1).toUpperCase() : 'A'; // You can replace 'A' with any default value
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.colorPrimary,
@@ -72,30 +76,56 @@ class _UserCommunityState extends State<UserCommunity> {
         ),
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
-              height: 270,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Hi ,$_userName",style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: AppColors.fontColorDark)),
-                    AppTextField(controller: commentController, maxLength: 1500,maxLines: 5,hint: ''),
-                    SizedBox(height: 10),
-                    AppButton(
-                      buttonText: 'Post',
-                      onTapButton: () {
-                        postCommentToFirestore(_userName!, commentController.text);
-                      },
-                      width: 100,
-                    )
-                  ],
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
+                height: 300,
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.fontColorGray),
+                                color: AppColors.fontColorWhite,
+                                borderRadius: BorderRadius.circular(40)),
+                            child: Center(
+                              child: Text(
+                                firstLetter,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24,
+                                  color: AppColors.fontColorDark,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text("Hi ,$_userName",style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                              color: AppColors.fontColorDark)),
+                        ],
+                      ),
+                      AppTextField(controller: commentController, maxLength: 1500,maxLines: 5,hint: ''),
+                      SizedBox(height: 10),
+                      AppButton(
+                        buttonText: 'Post',
+                        onTapButton: () {
+                          postCommentToFirestore(_userName!, commentController.text);
+                        },
+                        width: 100,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -108,17 +138,17 @@ class _UserCommunityState extends State<UserCommunity> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
                   var communityDocs = snapshot.data!.docs;
-
                   return ListView.builder(
                     itemCount: communityDocs.length,
                     itemBuilder: (context, index) {
                       var userName = communityDocs[index]['userName'];
                       var comment = communityDocs[index]['comment'];
                       var likesCount = communityDocs[index]['likesCount'] ?? 0;
+                      var seeMoreCount = communityDocs[index]['seeMoreCount'] ?? 0;
                       var likedBy = List<String>.from(communityDocs[index]['likedBy'] ?? []);
                       var commentId = communityDocs[index].id;
+
 
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
@@ -131,7 +161,11 @@ class _UserCommunityState extends State<UserCommunity> {
                               padding: const EdgeInsets.all(12.0),
                               child: Column(
                                 children: [
-                                  Text(userName),
+                                  Text(userName,style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: AppColors.fontColorDark)),
+                                  SizedBox(height: 10),
                                   GestureDetector(
                                     onTap: () {
                                       // Toggle the expansion state
@@ -151,12 +185,17 @@ class _UserCommunityState extends State<UserCommunity> {
                                         setState(() {
                                           isExpanded = true;
                                         });
+                                        // Update the seeMoreCount in Firestore
+                                        FirebaseFirestore.instance.collection('community').doc(commentId).update({
+                                          'seeMoreCount': FieldValue.increment(1),
+                                        });
                                       },
                                       child: Text(
                                         'See More...',
                                         style: TextStyle(color: Colors.blue),
                                       ),
                                     ),
+                                  SizedBox(height: 40),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -177,9 +216,26 @@ class _UserCommunityState extends State<UserCommunity> {
 
                                       Row(
                                         children: [
+                                          Icon(Icons.remove_red_eye_outlined),
+                                          SizedBox(width: 5),
+                                          InkResponse(
+                                              onTap:(){
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => UserReplyView(commentId: commentId),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text("$seeMoreCount views"))
+                                        ],
+                                      ),
+
+                                      Row(
+                                        children: [
                                           Image.asset(AppImages.appMenu, height: 25, width: 25,
                                               color: AppColors.fontColorDark),
-
+                                            SizedBox(width: 5),
                                            InkResponse(
                                             onTap:(){
                                               Navigator.push(
@@ -217,6 +273,7 @@ class _UserCommunityState extends State<UserCommunity> {
       'comment': comment,
       'likesCount': 0 ?? 0,
       'likedBy': [] ?? [],
+      'seeMoreCount': 0 ?? 0, // Initial count for See More clicks
       'timestamp': FieldValue.serverTimestamp(),
     }).then((value) {
       print('Comment added to Firestore!');

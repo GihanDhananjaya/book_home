@@ -28,14 +28,14 @@ class _NotificationViewState extends State<NotificationView> {
         body: SingleChildScrollView(
           child: Container(
             width: double.infinity,
-            height: 900,
+            height: 800,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
                   AppColors.fontColorWhite.withOpacity(0.5),
-                  AppColors.colorPrimary.withOpacity(0.8),
+                  AppColors.colorPrimary.withOpacity(0.9),
                 ],
               ),
             ),
@@ -66,52 +66,9 @@ class _NotificationViewState extends State<NotificationView> {
                     var formattedDate = DateFormat.yMd().add_Hm().format(date);
 
                     return Padding(
-                      padding: const EdgeInsets.only(left: 8.0,bottom: 8,right: 8,top: 10),
-                      child: ListTile(
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  notificationData['title'],
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: AppColors.fontColorDark,
-                                  ),
-                                ),
-                                Text(
-                                  formattedDate,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: AppColors.fontColorDark,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // Text(
-                            //   notificationData['body'],
-                            //   style: GoogleFonts.poppins(
-                            //     fontSize: 14,
-                            //     color: AppColors.fontColorDark,
-                            //   ),
-                            // ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Story: ${notificationData['latestChapter']['story'].substring(0, 40)}...',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: AppColors.fontColorDark,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Divider(color: AppColors.fontColorDark,)
-                          ],
-                        ),
-                        onTap: () {
+                      padding: const EdgeInsets.only(bottom: 8,top: 8),
+                      child: InkResponse(
+                        onTap: (){
                           String bookId = notificationData['bookId'] ?? '';
                           String title = notificationData['title']?? 'No title';
                           String chapterName = notificationData['chapterName']?? 'No chapter name';
@@ -122,10 +79,61 @@ class _NotificationViewState extends State<NotificationView> {
                               builder: (context) => AnotherPage(title: title,
                                 chapterName: chapterName,
                                 chapterStory: chapterStory,
-                                 ),
+                              ),
                             ),
                           );
                         },
+                        child: Container(
+                          width: double.infinity,
+                          height: 100,
+                          decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorWhite,width: 3),
+                              color: AppColors.appColorAccent.withOpacity(0.5)),
+                          child:Padding(
+                            padding:  EdgeInsets.only(left: 20,right: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      notificationData['title'],
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: AppColors.fontColorDark,
+                                      ),
+                                    ),
+                                    Text(
+                                      formattedDate,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.fontColorWhite,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Text(
+                                //   notificationData['body'],
+                                //   style: GoogleFonts.poppins(
+                                //     fontSize: 14,
+                                //     color: AppColors.fontColorDark,
+                                //   ),
+                                // ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Story: ${notificationData['latestChapter']['story'].substring(0, 40)}...',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.fontColorDark,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   },

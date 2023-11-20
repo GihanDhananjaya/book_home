@@ -18,7 +18,7 @@ class BookItemComponent extends StatelessWidget {
 
           decoration: BoxDecoration(
             color: AppColors.fieldBackgroundColor,
-            border: Border.all(color: AppColors.fontColorDark),
+            border: Border.all(color: AppColors.fontColorDark,width: 3),
           ),
           child:Image.network(fit: BoxFit.cover, bookListEntityList.imageUrl!)),
     );

@@ -34,19 +34,21 @@ class AnotherPage extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Title: $title',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text('Chapter Name: $chapterName', style: TextStyle(fontSize: 18)),
-              SizedBox(height: 10),
-              Text('Chapter Story: $chapterStory', style: TextStyle(fontSize: 16)),
-            ],
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Title: $title',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text('Chapter Name: $chapterName', style: TextStyle(fontSize: 18)),
+                SizedBox(height: 10),
+                Text('Chapter Story: $chapterStory', style: TextStyle(fontSize: 16)),
+              ],
+            ),
           ),
         ),
       ),

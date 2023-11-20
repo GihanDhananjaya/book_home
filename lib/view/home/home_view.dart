@@ -50,7 +50,36 @@ class _HomeViewState extends State<HomeView> {
   //     MaterialPageRoute(builder: (context) => LoginScreen(prefs: widget.prefs)),
   //   );
   // }
+  Future<bool> _checkIfUserHasViewedBook(String bookId) async {
+    try {
+      final User? currentUser = _auth.currentUser;
+      if (currentUser != null) {
+        final DocumentSnapshot bookSnapshot =
+        await _firestore.collection('books').doc(bookId).get();
 
+        if (bookSnapshot.exists) {
+          final List<dynamic> viewedBy = bookSnapshot['viewedBy'] ?? [];
+          return viewedBy.contains(currentUser.uid);
+        }
+        return false;
+      }
+      return false;
+    } catch (e) {
+      print('Error checking if user has viewed the book: $e');
+      return false;
+    }
+  }
+
+  void _handleBookTap(String bookId) async {
+    bool hasViewed = await _checkIfUserHasViewedBook(bookId);
+    if (!hasViewed) {
+      await _firestore.collection('books').doc(bookId).update({
+        'selectedCount': FieldValue.increment(1),
+        'viewedBy': FieldValue.arrayUnion([_auth.currentUser?.uid]),
+      });
+    }
+    // Continue with navigation to DetailsView
+  }
 
   void fetchUserRole() async {
     try {
@@ -220,8 +249,8 @@ class _HomeViewState extends State<HomeView> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                AppColors.fontColorWhite.withOpacity(0.5),
-                AppColors.colorPrimary.withOpacity(0.8),
+                AppColors.fontColorWhite.withOpacity(0.3),
+                AppColors.colorPrimary.withOpacity(0.9),
               ],
             ),
           ),
@@ -267,6 +296,8 @@ class _HomeViewState extends State<HomeView> {
                       final author = data['author'] ?? 'No Author';
                       final imageUrl = data['image_url'];
                       final chaptersData = data['chapters'];
+                      final bookId = document.id;
+
 
                       List<ChapterEntity> chapters = [];
 
@@ -284,6 +315,7 @@ class _HomeViewState extends State<HomeView> {
                         author: author,
                         imageUrl: imageUrl,
                         chapters: chapters,
+                        id: document.id,
                       );
                     }).toList();
 
@@ -293,7 +325,7 @@ class _HomeViewState extends State<HomeView> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: books.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                             mainAxisSpacing: 24,
                              crossAxisSpacing: 7,
                              crossAxisCount: 3,
@@ -302,7 +334,10 @@ class _HomeViewState extends State<HomeView> {
                         itemBuilder: (context, index) {
                           final book = books[index];
                           return InkResponse(
-                            onTap: (){
+                            onTap: ()   {
+
+                              _handleBookTap(book.id!);
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -311,9 +346,12 @@ class _HomeViewState extends State<HomeView> {
                                     author: book.author,
                                     imageUrl: book.imageUrl,
                                     chapters: book.chapters,
+                                    selectedCount: book.selectedCount,
+                                    bookId: book.id!, // Pass the bookId
                                   ),
                                 ),
                               );
+                              // Increment the count in Firestore
                             },
                             child: BookItemComponent(
                               bookListEntityList: books[index],),

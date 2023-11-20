@@ -111,6 +111,7 @@ class _AddBookViewState extends State<AddBookView> {
       );
     }
   }
+
   Future<void> _navigateToAddChapterView() async {
     final newChapter = await Navigator.of(context).push(
       MaterialPageRoute(
