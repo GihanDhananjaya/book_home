@@ -45,7 +45,7 @@ class CommentsSentComponent extends StatelessWidget {
 
                   child: InkResponse(
                       onTap: onTap,
-                      child: Image.asset(AppImages.appSentImg,width: 5,height: 5,color: AppColors.appColorAccent)),
+                      child: Image.asset(AppImages.appSentImg,width: 5,height: 5,color: AppColors.textBackgroundColor)),
                 ),
               ),
             )

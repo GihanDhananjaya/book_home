@@ -89,15 +89,16 @@ class _BookListViewState extends State<BookListView> {
     }
   }
 
-  _updateBook(BuildContext callingContext, String documentId, String currentTitle,
-      String currentAuthor, String imageUrl, List<ChapterEntity> chapters) async {
+  _updateBook(BuildContext callingContext, String documentId,
+      String currentName,String currentAuthor, String currentTitle, String imageUrl, List<ChapterEntity> chapters) async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditProfileView(
           bookId: documentId,
-          currentTitle: currentTitle,
+          currentName:currentName,
           currentAuthor: currentAuthor,
+          currentTitle: currentTitle,
           currentImageUrl: imageUrl,
           chapters: chapters,
         ),
@@ -109,20 +110,23 @@ class _BookListViewState extends State<BookListView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            backgroundColor: AppColors.colorPrimary,
-            title: Text('Book Management')
-        ),
+        appBar: BookAppBar(
+            onBackPressed: () {
+              Navigator.pop(context);
+            },
+            title: 'Book Management'),
         body: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                AppColors.fontColorWhite.withOpacity(0.5),
-                AppColors.colorPrimary.withOpacity(0.8),
-              ],
-            ),
+            color: AppColors.containerBackgroundColor
+            // gradient: LinearGradient(
+            //   begin: Alignment.centerLeft,
+            //   end: Alignment.centerRight,
+            //   colors: [
+            //     AppColors.fontColorWhite.withOpacity(0.5),
+            //     AppColors.colorPrimary.withOpacity(0.8),
+            //   ],
+            // ),
           ),
           child: Column(
             children: [
@@ -146,8 +150,9 @@ class _BookListViewState extends State<BookListView> {
 
                   List<BookListEntity> books = documents.map((document) {
                     final data = document.data() as Map<String, dynamic>;
-                    final title = data['title'] ?? 'No Title';
+                    final bookName = data['book_name'] ?? 'No BookName';
                     final author = data['author'] ?? 'No Author';
+                    final title = data['title'] ?? 'No Selected';
                     final imageUrl = data['image_url']?? "No image";
                     final chaptersData = data['chapters'];
 
@@ -163,8 +168,9 @@ class _BookListViewState extends State<BookListView> {
                     }
 
                     return BookListEntity(
-                      title: title,
+                      bookName: bookName,
                       author: author,
+                      title: title,
                       imageUrl: imageUrl,
                       chapters: chapters,
                     );
@@ -183,7 +189,8 @@ class _BookListViewState extends State<BookListView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailsView(
-                                  title: book.title,
+                                  bookName: book.bookName,
+                                  title: book.title!,
                                   author: book.author,
                                   imageUrl: book.imageUrl,
                                   chapters: book.chapters,
@@ -198,8 +205,9 @@ class _BookListViewState extends State<BookListView> {
                               _updateBook(
                                 context,
                                 documents[index].id,
-                                book.title,
+                                book.bookName!,
                                 book.author,
+                                book.title!,
                                 book.imageUrl!,
                                 book.chapters,
                               );

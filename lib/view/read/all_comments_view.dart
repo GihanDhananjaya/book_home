@@ -59,14 +59,15 @@ class _AllCommentsViewState extends State<AllCommentsView> {
           title: 'All Comments'),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft, // Start from the bottom-left corner
-            end: Alignment.centerRight,     // End at the top-right corner
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-              AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            ],
-          ),
+            color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+          //   end: Alignment.centerRight,     // End at the top-right corner
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+          //   ],
+          // ),
         ),
         height: double.infinity,
         width: double.infinity,
@@ -82,9 +83,9 @@ class _AllCommentsViewState extends State<AllCommentsView> {
               child: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color:  AppColors.appColorAccent,
+                    color:  AppColors.textBackgroundColor,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.appColorAccent)),
+                    border: Border.all(color: AppColors.fontBackgroundColor)),
                 child: Row(
                   children: [
                     Container(

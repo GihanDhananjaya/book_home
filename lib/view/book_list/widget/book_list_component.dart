@@ -24,7 +24,8 @@ class BookListComponent extends StatelessWidget {
         width: double.infinity,
         height: 100,
         decoration: BoxDecoration(
-            color: AppColors.colorPrimary,borderRadius: BorderRadius.circular(12)),
+          border: Border.all(color:AppColors.fontBackgroundColor),
+            color: AppColors.textBackgroundColor,borderRadius: BorderRadius.circular(12)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -44,7 +45,7 @@ class BookListComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(bookListEntityList.title,
+                Text(bookListEntityList.bookName!,
                     style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
@@ -55,16 +56,21 @@ class BookListComponent extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         fontSize: 10,
                         color: AppColors.fieldBackgroundColor)),
+                Text(bookListEntityList.title!,
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 10,
+                        color: AppColors.fieldBackgroundColor)),
               ],
             ),
             Spacer(),
             InkResponse(
                 onTap: onEdit,
-                child: Icon(Icons.edit,)),
+                child: Icon(Icons.edit,color: AppColors.fontColorWhite,)),
             SizedBox(width: 10),
             InkResponse(
                 onTap: onDelete,
-                child: Icon(Icons.delete,))
+                child: Icon(Icons.delete,color: AppColors.fontColorWhite,))
           ],
         ),
       ),

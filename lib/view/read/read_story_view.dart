@@ -171,14 +171,15 @@ class _ReadStoryViewState extends State<ReadStoryView> {
           height: 800,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft, // Start from the bottom-left corner
-              end: Alignment.centerRight,     // End at the top-right corner
-              colors: [
-                AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-                AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-              ],
-            ),
+              color: AppColors.containerBackgroundColor
+            // gradient: LinearGradient(
+            //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+            //   end: Alignment.centerRight,     // End at the top-right corner
+            //   colors: [
+            //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+            //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+            //   ],
+            // ),
           ),
           child: SingleChildScrollView(
             child: Column(children: [
@@ -186,7 +187,7 @@ class _ReadStoryViewState extends State<ReadStoryView> {
               Text(widget.chapterName,style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 26,
-                  color: AppColors.fontColorDark)),
+                  color: AppColors.fontColorWhite)),
               SizedBox(height: 10),
               Padding(
                 padding: EdgeInsets.all(20.0),
@@ -194,7 +195,7 @@ class _ReadStoryViewState extends State<ReadStoryView> {
                   child: Text(widget.chapterStory,style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: AppColors.fontColorDark)),
+                      color: AppColors.fontColorWhite)),
                 ),
               ),
 
@@ -220,7 +221,7 @@ class _ReadStoryViewState extends State<ReadStoryView> {
                   },
                   child: Padding(
                     padding:  EdgeInsets.only(bottom: 20.0),
-                    child: Text('Read all comments',style: TextStyle(color: AppColors.appColorAccent,),),
+                    child: Text('Read all comments',style: TextStyle(color: AppColors.primaryBackgroundColor,),),
                   ))
             ]),
           ),

@@ -21,7 +21,7 @@ class AppButton extends StatefulWidget {
         this.width = 0,
         this.prefixIcon,
         this.borderColor,
-        this.buttonColor = AppColors.colorPrimary,
+        this.buttonColor = AppColors.textBackgroundColor,
         this.textColor = AppColors.fontColorWhite,
         this.height,
       });
@@ -31,7 +31,7 @@ class AppButton extends StatefulWidget {
 }
 
 class _AppButtonState extends State<AppButton> {
-  Color _buttonColor = AppColors.colorPrimary;
+  Color _buttonColor = AppColors.textBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _AppButtonState extends State<AppButton> {
         },
         onExit: (e) {
           setState(() {
-            _buttonColor = AppColors.colorPrimary;
+            _buttonColor = AppColors.textBackgroundColor;
           });
         },
         child: Material(
@@ -60,7 +60,7 @@ class _AppButtonState extends State<AppButton> {
               border: Border.all(
                   color: widget.borderColor ?? AppColors.colorTransparent),
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: AppColors.colorPrimary
+              color: AppColors.textBackgroundColor
             ),
             child: Center(
               child: Row(
@@ -76,7 +76,7 @@ class _AppButtonState extends State<AppButton> {
                   Text(
                     widget.buttonText,
                     style: TextStyle(
-                        color: AppColors.fontColorDark,
+                        color: AppColors.fontColorWhite,
                         fontWeight: FontWeight.w500,
                         fontSize: 18),
                   ),

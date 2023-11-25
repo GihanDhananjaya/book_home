@@ -10,6 +10,7 @@ import '../community/user_community.dart';
 import '../home/home_view.dart';
 import '../notification_view/notification_home.dart';
 import '../notification_view/notification_view.dart';
+import '../profile_view/update_profile_view.dart';
 import '../profile_view/profile_view.dart';
 
 
@@ -82,7 +83,7 @@ class _BottomBarViewState extends State<BottomBarView> {
         height: 60,
         clipBehavior: Clip.hardEdge,
         padding: const EdgeInsets.only(top: 5),
-        color: AppColors.appColorAccent,
+        color: AppColors.containerBackgroundColor,
         elevation: 1,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -124,7 +125,7 @@ class _BottomBarViewState extends State<BottomBarView> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),color: AppColors.colorPrimary,
+                    borderRadius: BorderRadius.circular(40),color: AppColors.textBackgroundColor,
 
                   ),
                 ),

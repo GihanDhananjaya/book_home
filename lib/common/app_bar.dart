@@ -28,9 +28,9 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 22,
-            color: AppColors.fontColorDark),
+            color: AppColors.fontColorWhite),
       ),
-      backgroundColor:AppColors.colorPrimary,
+      backgroundColor:AppColors.containerBackgroundColor,
       elevation: 0,
       actions: actions,
       centerTitle: true,
@@ -49,7 +49,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
           },
           child: Icon(
             Icons.arrow_back_ios_outlined,
-            color: AppColors.fontColorDark,
+            color: AppColors.fontColorWhite,
           ))
           : const SizedBox.shrink(),
     );

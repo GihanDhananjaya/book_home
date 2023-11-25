@@ -8,15 +8,16 @@ import '../../utils/app_colors.dart';
 import '../read/read_story_view.dart';
 
 class DetailsView extends StatefulWidget {
-  final String title;
-  final String author;
-  final String? imageUrl;
   final String? bookId;
+  final String? bookName;
+  final String author;
+  final String? title;
+  final String? imageUrl;
   final List<ChapterEntity> chapters;
   final int? selectedCount;
 
-  DetailsView({required this.title, required this.author,
-    this.imageUrl,required this.chapters, this.bookId,this.selectedCount,});
+  DetailsView({this.bookId,this.bookName, required this.author, this.title,
+    this.imageUrl,required this.chapters,this.selectedCount,});
 
   @override
   State<DetailsView> createState() => _DetailsViewState();
@@ -61,32 +62,42 @@ class _DetailsViewState extends State<DetailsView> {
             title: 'Chapters'),
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft, // Start from the bottom-left corner
-              end: Alignment.centerRight,     // End at the top-right corner
-              colors: [
-                AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-                AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-              ],
-            ),
+            color: AppColors.containerBackgroundColor
+            // gradient: LinearGradient(
+            //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+            //   end: Alignment.centerRight,     // End at the top-right corner
+            //   colors: [
+            //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+            //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+            //   ],
+            // ),
           ),
           child: SingleChildScrollView(
             child: Column(children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
+                  height: 200,
+                  width: 130,
+                  decoration: BoxDecoration(border: Border.all(color: AppColors.textBackgroundColor, width: 5)),
+                  child: widget.imageUrl != null
+                      ? Image.network(
+                    widget.imageUrl!,
                     height: 200,
-                    width: 130,
-                    decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorWhite,width: 5)),
-                    child: Image.network(widget.imageUrl!,height: 200,width: double.infinity,fit: BoxFit.cover,)),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                      : Placeholder(), // You can replace Placeholder with any widget you want to show when imageUrl is null
+                ),
+
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.title,style: GoogleFonts.dancingScript(
+                  Text(widget.bookName! ?? 'No Data',style: GoogleFonts.dancingScript(
                       fontWeight: FontWeight.w800,
                       fontSize: 28,
-                      color: AppColors.fontColorDark)),
+                      color: AppColors.fontColorWhite)),
                 ],
               ),
               SizedBox(height: 10),
@@ -97,16 +108,16 @@ class _DetailsViewState extends State<DetailsView> {
                   children: [
                       Row(
                       children: [
-                        Icon(Icons.remove_red_eye),
+                        Icon(Icons.remove_red_eye,color: AppColors.fontColorWhite),
                         SizedBox(width: 5),
-                        Text("$selectedCount Views")
+                        Text("$selectedCount Views",style: TextStyle(color:AppColors.fontColorWhite),)
                       ],
                     ),
                     Row(
                       children: [
-                        Icon(Icons.list),
+                        Icon(Icons.list,color: AppColors.fontColorWhite),
                         SizedBox(width: 5),
-                        Text("${widget.chapters.length} Parts"),
+                        Text("${widget.chapters.length} Parts",style: TextStyle(color:AppColors.fontColorWhite)),
                       ],
                     ),
                   ],
@@ -129,7 +140,7 @@ class _DetailsViewState extends State<DetailsView> {
                             context,
                             MaterialPageRoute(builder: (context) => ReadStoryView(
                               chapterName: widget.chapters[index].name,
-                              chapterStory: widget.chapters[index].story, title: widget.title,
+                              chapterStory: widget.chapters[index].story, title: widget.title!,
                             )),
                           );
                         },
@@ -142,7 +153,7 @@ class _DetailsViewState extends State<DetailsView> {
                                 width: double.infinity,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                    color: AppColors.appColorAccent,
+                                    color: AppColors.textBackgroundColor,
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                   child: Text('Chapter ${index + 1}: ${widget.chapters[index].name}',style: GoogleFonts.poppins(

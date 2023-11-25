@@ -8,10 +8,10 @@ import '../../../utils/app_images.dart';
 class ImageSlider extends StatelessWidget {
 
   List<ImageSliderEntity> imageList = [
-    ImageSliderEntity(image: AppImages.appAd1, name: ''),
-    ImageSliderEntity(image: AppImages.appAd2, name: ''),
-    ImageSliderEntity(image: AppImages.appAd3, name: ''),
-    ImageSliderEntity(image: AppImages.appAd2, name: ''),
+    ImageSliderEntity(image: AppImages.appAd7, name: ''),
+    ImageSliderEntity(image: AppImages.appAd10, name: ''),
+    ImageSliderEntity(image: AppImages.appAd5, name: ''),
+    ImageSliderEntity(image: AppImages.appAd9, name: ''),
    // ImageSliderEntity(image: AppImages.appAd2, name: ''),
     // Add more image paths here
   ];

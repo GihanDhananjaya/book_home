@@ -16,16 +16,18 @@ import 'entity/chapter_entity.dart';
 
 class EditProfileView extends StatefulWidget {
   final String? bookId;
-  final String? currentTitle;
+  final String? currentName;
   final String? currentAuthor;
+  final String? currentTitle;
   final String? currentImageUrl;
   List<ChapterEntity> chapters; // List to store chapters.
 
   EditProfileView({
     Key? key,
     this.bookId,
-    this.currentTitle,
+    this.currentName,
     this.currentAuthor,
+    this.currentTitle,
     this.currentImageUrl,
     required this.chapters, // Initialize chapters list.
   }) : super(key: key);
@@ -40,26 +42,43 @@ class _EditProfileViewState extends State<EditProfileView> {
   Uint8List? profileImage;
   String? fileExtension;
   String? imageUrl;
+  String? _selectedBookTitle;
+  final List<String> bookTitles = [
+    'Title 1',
+    'Title 2',
+    'Title 3',
+  ];
 
   @override
   void initState() {
     super.initState();
-    _bookNameController.text = widget.currentTitle ?? '';
+    _bookNameController.text = widget.currentName ?? '';
     _authorNameController.text = widget.currentAuthor ?? '';
     imageUrl = widget.currentImageUrl;
+    _selectedBookTitle = widget.currentTitle;
+  }
+
+  List<DropdownMenuItem<String>> _getBookTitles(List<String> bookTitles) {
+    return bookTitles.map((title) {
+      return DropdownMenuItem<String>(
+        value: title,
+        child: Text(title),
+      );
+    }).toList();
   }
 
   Future<void> _updateProfile(BuildContext context) async {
     try {
-      final updatedTitle = _bookNameController.text;
+      final updatedName = _bookNameController.text;
       final updatedAuthor = _authorNameController.text;
-
+      final title = _selectedBookTitle;
       final firestore = FirebaseFirestore.instance;
       final collection = firestore.collection('books');
 
       final updatedData = {
-        'title': updatedTitle,
+        'book_name': updatedName,
         'author': updatedAuthor,
+        'title':title,
         'chapters': widget.chapters.map((chapter) {
           return {
             'name': chapter.name,
@@ -92,7 +111,8 @@ class _EditProfileViewState extends State<EditProfileView> {
 
       // Define the notification data you want to store.
       final notificationData = {
-        'title': "යාවත් කාලීන කළා $updatedTitle",
+        'title': "යාවත් කාලීන කළා $updatedName",
+        'image_url': imageUrl,
         'body': widget.chapters.map((chapter) {
           return {
             'name': chapter.name,
@@ -141,12 +161,26 @@ class _EditProfileViewState extends State<EditProfileView> {
     });
   }
 
+  List<DropdownMenuItem<String>> _getBookTitle() {
+    // Implement logic to fetch book titles from Firestore or other data source
+    // and return a list of DropdownMenuItem<String>
+    // Example:
+    List<String> bookTitles = ['Novels', 'Short Story', 'Love Story','Action Story']; // Replace with actual data
+
+    return bookTitles.map((title) {
+      return DropdownMenuItem<String>(
+        value: title,
+        child: Text(title),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BookAppBar(title:'Edit Book'),
       floatingActionButton: Container(
-        decoration: BoxDecoration(color: AppColors.colorPrimary,
+        decoration: BoxDecoration(color: AppColors.textBackgroundColor,
             borderRadius: BorderRadius.circular(40)),
         width: 250,
         height: 60,
@@ -172,7 +206,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 }
               },
               child: Icon(Icons.add,color: AppColors.fontColorWhite),
-              backgroundColor: AppColors.appColorAccent, // Change the color as needed
+              backgroundColor: AppColors.fontBackgroundColor, // Change the color as needed
             ),
           ],
         ),
@@ -180,14 +214,15 @@ class _EditProfileViewState extends State<EditProfileView> {
       body: Container(
         height: 800,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.5),
-            ],
-          ),
+          color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),
+          //     AppColors.colorPrimary.withOpacity(0.5),
+          //   ],
+          // ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -213,7 +248,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 ),
                 SizedBox(height: 10),
                 ProfileImageUi(
-                  title: 'Edit Profile',
+                  title: 'Edit Book',
                   onChanged: (bytes, extension) async {
                     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -228,9 +263,36 @@ class _EditProfileViewState extends State<EditProfileView> {
                     }
                   },
                 ),
-                AppTextField(hint: 'name', controller: _bookNameController),
+                AppTextField(hint: 'Name', controller: _bookNameController),
                 SizedBox(height: 20),
-                AppTextField(hint: 'author', controller: _authorNameController),
+                AppTextField(hint: 'Author', controller: _authorNameController),
+                SizedBox(height: 20),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Title',style: TextStyle(color: AppColors.fontLabelGray)),
+                    Container(
+                      padding: EdgeInsets.only(left: 8),
+                      decoration: BoxDecoration(color: AppColors.fontColorWhite,borderRadius: BorderRadius.all(Radius.circular(8))),
+                      width: double.infinity,
+                      height: 50,
+                      child: DropdownButtonFormField<String>(
+
+                        value: _selectedBookTitle,
+                        hint: Text('Select Book Title'),
+                        items: _getBookTitle(), // Implement this method to get the book titles
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedBookTitle = value as String?;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+
                 SizedBox(height: 20),
                 // Add Chapter Input Fields
                 // AppButton(
@@ -248,6 +310,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                 //     }
                 //   },
                 // ),
+
+
                 SizedBox(height: 20),
                 // Display Chapters
                 if (widget.chapters.isNotEmpty)
@@ -256,7 +320,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                     children: [
                       Text(
                         'Chapters:',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.fontColorWhite),
                       ),
                       ListView.builder(
                         shrinkWrap: true,
@@ -264,7 +328,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                         itemBuilder: (context, index) {
                           final chapter = widget.chapters[index];
                           return ListTile(
-                            title: Text('Name: ${chapter.name}'),
+                            title: Text('Name: ${chapter.name}',style: TextStyle(color: AppColors.fontColorWhite)),
 
                           );
                         },
@@ -286,4 +350,5 @@ class _EditProfileViewState extends State<EditProfileView> {
       ),
     );
   }
+
 }

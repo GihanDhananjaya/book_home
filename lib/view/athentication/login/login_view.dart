@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   );
                 },
-                child: Text('Create New Account'),
+                child: Text('Create New Account',style: TextStyle(color: AppColors.appColorAccent)),
               ),
             ],
           ),

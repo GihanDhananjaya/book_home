@@ -133,7 +133,7 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
               child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(70),
-                      color: AppColors.colorPrimary),
+                      color: AppColors.fontBackgroundColor),
                   height: 40,
                   width: 40,
                   child: Icon(Icons.add_a_photo)),
@@ -149,7 +149,7 @@ class _ProfileImageUiState extends State<ProfileImageUi> {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 24,
-                  color: AppColors.fontColorDark)),
+                  color: AppColors.fontColorWhite)),
         ),
       ],
     );

@@ -16,6 +16,12 @@ class AppColors {
   static const Color colorIconOuter = Color(0xFF5A5A5A);
   static const Color colorImagePlaceholder = Color(0xFFD9D9D9);
 
+
+  static const Color containerBackgroundColor = Color(0xFF272b3c);
+  static const Color textBackgroundColor = Color(0xFF3e5f6d);
+  static const Color fontBackgroundColor = Color(0xFF55939e);
+  static const Color primaryBackgroundColor = Color(0xFF6dc7d0);
+
   static const Color colorSuccess = Colors.green;
   static const Color colorFailed = Colors.red;
   static const Color colorPending = Colors.orange;

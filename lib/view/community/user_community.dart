@@ -21,7 +21,7 @@ class UserCommunity extends StatefulWidget {
 class _UserCommunityState extends State<UserCommunity> {
   final TextEditingController commentController = TextEditingController();
 
-
+  String? imageUrl;
   String? _userName;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -42,9 +42,10 @@ class _UserCommunityState extends State<UserCommunity> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-
         setState(() {
-          _userName = userData['userName']; // Assuming 'userName' is the field name in Firestore
+          _userName = userData['userName'];
+          imageUrl = userData['profileImageURL'] ?? '';
+
         });
       }
     } catch (e) {
@@ -57,7 +58,7 @@ class _UserCommunityState extends State<UserCommunity> {
     final firstLetter = _userName?.isNotEmpty ?? false ? _userName!.substring(0, 1).toUpperCase() : 'A'; // You can replace 'A' with any default value
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.colorPrimary,
+        backgroundColor: AppColors.containerBackgroundColor,
         title: Text(
           'User Community',
           style: TextStyle(color: AppColors.fontColorWhite),
@@ -65,21 +66,23 @@ class _UserCommunityState extends State<UserCommunity> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.8),
-            ],
-          ),
+           color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.colorPrimary.withOpacity(0.1),
+          //     AppColors.colorPrimary.withOpacity(0.9),
+          //   ],
+          // ),
         ),
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
-                decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
+                decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark),
+                    ),
                 height: 300,
                 width: double.infinity,
                 child: Padding(
@@ -94,10 +97,15 @@ class _UserCommunityState extends State<UserCommunity> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.fontColorGray),
-                                color: AppColors.fontColorWhite,
-                                borderRadius: BorderRadius.circular(40)),
-                            child: Center(
+                              border: Border.all(color: AppColors.fontColorGray),
+                              color: AppColors.fontColorWhite,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: imageUrl != null && imageUrl!.isNotEmpty
+                                ? CircleAvatar(
+                              backgroundImage: NetworkImage(imageUrl!),
+                            )
+                                : Center(
                               child: Text(
                                 firstLetter,
                                 style: TextStyle(
@@ -112,7 +120,7 @@ class _UserCommunityState extends State<UserCommunity> {
                           Text("Hi ,$_userName",style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w500,
                               fontSize: 20,
-                              color: AppColors.fontColorDark)),
+                              color: AppColors.fontColorWhite)),
                         ],
                       ),
                       AppTextField(controller: commentController, maxLength: 1500,maxLines: 5,hint: ''),
@@ -153,7 +161,7 @@ class _UserCommunityState extends State<UserCommunity> {
                       return Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Container(
-                          decoration: BoxDecoration(border: Border.all(color: AppColors.appColorAccent)),
+                          decoration: BoxDecoration(border: Border.all(color: AppColors.textBackgroundColor)),
                           width: double.infinity,
                           height: 250,
                           child: SingleChildScrollView(
@@ -175,7 +183,9 @@ class _UserCommunityState extends State<UserCommunity> {
                                     },
                                     child: Text(
                                       isExpanded ? comment : comment.substring(3, 450) + '...', // Display limited characters initially
-                                      maxLines: isExpanded ? null : 4, // Show all lines if expanded
+                                      maxLines: isExpanded ? null : 4,
+                                      // Show all lines if expanded
+                                      style: TextStyle(color: AppColors.fontColorWhite),
                                     ),
                                   ),
                                   if (!isExpanded)
@@ -207,16 +217,19 @@ class _UserCommunityState extends State<UserCommunity> {
                                         child: Row(
                                           children: [
                                             Icon(
-                                              likedBy.contains(_auth.currentUser?.uid) ? Icons.favorite : Icons.favorite_border,
+                                              likedBy.contains(_auth.currentUser?.uid) ?
+                                              Icons.favorite : Icons.favorite_border,
+                                              color: AppColors.primaryBackgroundColor,
                                             ),
-                                            Text("$likesCount Likes")
+                                            Text("$likesCount Likes",style: TextStyle(
+                                                color: AppColors.fontColorWhite),)
                                           ],
                                         ),
                                       ),
 
                                       Row(
                                         children: [
-                                          Icon(Icons.remove_red_eye_outlined),
+                                          Icon(Icons.remove_red_eye_outlined,color: AppColors.fontColorWhite),
                                           SizedBox(width: 5),
                                           InkResponse(
                                               onTap:(){
@@ -227,14 +240,15 @@ class _UserCommunityState extends State<UserCommunity> {
                                                   ),
                                                 );
                                               },
-                                              child: Text("$seeMoreCount views"))
+                                              child: Text("$seeMoreCount views",style: TextStyle(
+                                                  color: AppColors.fontColorWhite)))
                                         ],
                                       ),
 
                                       Row(
                                         children: [
                                           Image.asset(AppImages.appMenu, height: 25, width: 25,
-                                              color: AppColors.fontColorDark),
+                                              color: AppColors.fontColorWhite),
                                             SizedBox(width: 5),
                                            InkResponse(
                                             onTap:(){
@@ -245,7 +259,8 @@ class _UserCommunityState extends State<UserCommunity> {
                                                 ),
                                               );
                                                  },
-                                              child: Text("read reply"))
+                                              child: Text("read reply",style: TextStyle(
+                                                  color: AppColors.fontColorWhite)))
                                         ],
                                       ),
                                     ],

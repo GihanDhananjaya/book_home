@@ -1,7 +1,8 @@
 import 'chapter_entity.dart';
 
 class BookListEntity {
-  final String title;
+  final String? bookName;
+  final String? title;
   final String author;
   final String? imageUrl;
   final String? id;
@@ -9,7 +10,8 @@ class BookListEntity {
   final int? selectedCount;
 
   BookListEntity({
-    required this.title,
+    this.bookName,
+    this.title,
     required this.author,
     this.imageUrl,
     this.id,

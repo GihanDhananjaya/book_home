@@ -1,4 +1,7 @@
 import 'dart:typed_data';
+import 'package:book_home/view/profile_view/update_profile_view.dart';
+import 'package:book_home/view/profile_view/widget/profile_image.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,8 +28,10 @@ class _ProfileViewState extends State<ProfileView> {
 
   Uint8List? profileImage;
   bool isUpdated = false;
-
-
+  String? userName;
+  String? userEmail;
+  String? userMobileNumber;
+  String? imageUrl;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -34,9 +39,8 @@ class _ProfileViewState extends State<ProfileView> {
   void initState() {
     super.initState();
     // Fetch user data when entering the ProfileView
-    setState(() {
-      _fetchUserData();
-    });
+    _fetchUserData();
+
   }
 
   Future<void> _fetchUserData() async {
@@ -53,9 +57,10 @@ class _ProfileViewState extends State<ProfileView> {
 
         setState(() {
           // Set the text fields with user details
-          fullNameController.text = userData['fullName'] ?? '';
-          emailController.text = user.email ?? '';
-          phoneNumberController.text = userData['phoneNumber'] ?? '';
+          userName = userData['userName'] ?? '';
+          userEmail = user.email ?? '';
+          userMobileNumber = userData['phoneNumber'] ?? '';
+          imageUrl = userData['profileImageURL'] ?? '';
         });
       }
     } catch (error) {
@@ -70,7 +75,7 @@ class _ProfileViewState extends State<ProfileView> {
 
       if (user != null) {
         await _firestore.collection('users').doc(user.uid).update({
-          'fullName': fullNameController.text,
+          'userName': fullNameController.text,
           'phoneNumber': phoneNumberController.text,
         });
 
@@ -90,40 +95,138 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    final firstLetter = userName?.isNotEmpty ?? false ? userName!.substring(0, 1).toUpperCase() : 'A';
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.colorPrimary,
+        backgroundColor: AppColors.containerBackgroundColor,
         title: Text(
-          'Edit Profile',
+          'User Profile',
           style: TextStyle(color: AppColors.fontColorWhite),
         ),
       ),
       body: Container(
+        height: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.8),
-            ],
-          ),
+          color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),
+          //     AppColors.colorPrimary.withOpacity(0.8),
+          //   ],
+          // ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(22.0),
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfileImageUi(title: ''),
-                AppTextField(hint: 'Name', controller: fullNameController),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.fontColorGray),
+                        color: AppColors.fontColorWhite,
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: imageUrl != null && imageUrl!.isNotEmpty
+                          ? CircleAvatar(
+                        backgroundImage: NetworkImage(imageUrl!),
+                      )
+                          : Center(
+                        child: Text(
+                          firstLetter,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 44,
+                            color: AppColors.fontColorDark,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Text('254',style: TextStyle(color: AppColors.fontColorWhite)),
+                        Text('Followers',style: TextStyle(color: AppColors.fontColorWhite)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text('54',style: TextStyle(color: AppColors.fontColorWhite)),
+                        Text('Following',style: TextStyle(color: AppColors.fontColorWhite)),
+                      ],
+                    )
+                  ],
+                ),
                 SizedBox(height: 20),
-                AppTextField(hint: 'Email', controller: emailController),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(userName ?? '',style: TextStyle(color: AppColors.fontColorWhite,fontSize: 22)),
+                ),
                 SizedBox(height: 20),
-                AppTextField(hint: 'Phone Number', controller: phoneNumberController),
+                Row(
+                  children: [
+                    InkResponse(
+                      onTap: (){
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => UpdateProfileView()),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 30,
+                        decoration: BoxDecoration(
+                            color: AppColors.fontBackgroundColor,borderRadius: BorderRadius.circular(8)),
+                        child: Row(
+                         children: [
+                           Icon(Icons.edit),
+                           Text('Edit Profile',style: TextStyle(color: AppColors.fontColorWhite),)
+                         ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Container(
+                      width: 100,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          color: AppColors.fontBackgroundColor,borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        children: [
+                          Icon(Icons.mail),
+                          Text('Massanger',style: TextStyle(color: AppColors.fontColorWhite),)
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(height: 50),
+                Row(
+                  children: [
+                    Icon(Icons.email_outlined,color: AppColors.fontColorWhite),
+                    SizedBox(width: 10),
+                    Text('email :',style: TextStyle(color: AppColors.fontColorWhite)),
+                    SizedBox(width: 10),
+                    Text(userEmail ?? '',style: TextStyle(color: AppColors.fontColorWhite))
+                  ],
+                ),
                 SizedBox(height: 20),
-                AppPasswordField(hint: 'New Password', controller: newPasswordController),
-                SizedBox(height: 20),
-                AppPasswordField(hint: 'Confirm Password', controller: confirmPasswordController),
+                Row(
+                  children: [
+                    Icon(Icons.call,color: AppColors.fontColorWhite),
+                    SizedBox(width: 10),
+                    Text('mobile :',style: TextStyle(color: AppColors.fontColorWhite)),
+                    SizedBox(width: 10),
+                    Text(userMobileNumber ?? '',style: TextStyle(color: AppColors.fontColorWhite))
+                  ],
+                ),
+
                 SizedBox(height: 20),
                 AppButton(
                   buttonText: 'Update Profile',

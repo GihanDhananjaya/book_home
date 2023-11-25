@@ -27,7 +27,7 @@ class BottomBarItem extends StatelessWidget {
             },
             child: Image.asset(
               icon,
-              color: isSelected ? AppColors.colorPending:
+              color: isSelected ? AppColors.primaryBackgroundColor:
               AppColors.fontColorWhite,
               width: 30,
               height: 30,

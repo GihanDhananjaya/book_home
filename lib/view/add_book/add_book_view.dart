@@ -26,6 +26,8 @@ class _AddBookViewState extends State<AddBookView> {
   String? _selectedImage;
   Uint8List? profileImage;
   String? fileExtension;
+  String? _selectedBookTitle;
+
 
   final TextEditingController _textField1Controller = TextEditingController();
   final TextEditingController _textField2Controller = TextEditingController();
@@ -79,10 +81,11 @@ class _AddBookViewState extends State<AddBookView> {
       //       .toList();
 
       final bookData = {
-        'title': bookName,   // Set the book title
+        'book_name': bookName,   // Set the book title
         'author': authorName, // Set the author's name
         'image_url': imageUrl,
         'chapters': chapterDataList,
+        'title': _selectedBookTitle,
       };
 
       final newDocument = await collectionReference .add(bookData);
@@ -125,6 +128,21 @@ class _AddBookViewState extends State<AddBookView> {
       });
     }
   }
+
+  List<DropdownMenuItem<String>> _getBookTitles() {
+    // Implement logic to fetch book titles from Firestore or other data source
+    // and return a list of DropdownMenuItem<String>
+    // Example:
+    List<String> bookTitles = ['Novels', 'Short Story', 'Love Story','Action Story']; // Replace with actual data
+
+    return bookTitles.map((title) {
+      return DropdownMenuItem<String>(
+        value: title,
+        child: Text(title),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
@@ -136,14 +154,15 @@ class _AddBookViewState extends State<AddBookView> {
           width:double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft, // Start from the bottom-left corner
-              end: Alignment.centerRight,     // End at the top-right corner
-              colors: [
-                AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-                AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-              ],
-            ),
+            color: AppColors.containerBackgroundColor
+            // gradient: LinearGradient(
+            //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+            //   end: Alignment.centerRight,     // End at the top-right corner
+            //   colors: [
+            //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+            //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+            //   ],
+            // ),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -177,6 +196,31 @@ class _AddBookViewState extends State<AddBookView> {
                       SizedBox(height: 20),
                       AppTextField(hint: 'author',controller: _authorNameController),
                       SizedBox(height: 20),
+
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Title',style: TextStyle(color: AppColors.fontLabelGray)),
+                          Container(
+                            padding: EdgeInsets.only(left: 8),
+                            decoration: BoxDecoration(color: AppColors.fontColorWhite,borderRadius: BorderRadius.all(Radius.circular(8))),
+                            width: double.infinity,
+                            height: 50,
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedBookTitle,
+                              hint: Text('Select Book Title'),
+                              items: _getBookTitles(), // Implement this method to get the book titles
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedBookTitle = value as String?;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
 
                       Container(
                         height: 300,
@@ -223,7 +267,7 @@ class _AddBookViewState extends State<AddBookView> {
           ),
         ),
         floatingActionButton: Container(
-          decoration: BoxDecoration(color: AppColors.colorPrimary,
+          decoration: BoxDecoration(color: AppColors.textBackgroundColor,
               borderRadius: BorderRadius.circular(40)),
           width: 250,
           height: 60,
@@ -240,7 +284,7 @@ class _AddBookViewState extends State<AddBookView> {
                   _navigateToAddChapterView();
                 },
                 child: Icon(Icons.add),
-                backgroundColor: AppColors.fontColorGray, // Change the color as needed
+                backgroundColor: AppColors.fontBackgroundColor, // Change the color as needed
               ),
             ],
           ),
@@ -250,7 +294,6 @@ class _AddBookViewState extends State<AddBookView> {
     );
   }
 }
-
 
 // Future<void> _navigateToAddChapterView() async {
 //   final newChapter = await Navigator.of(context).push(

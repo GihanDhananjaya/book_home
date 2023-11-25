@@ -17,6 +17,7 @@ import '../book_list/book_list_view.dart';
 import '../book_list/widget/book_list_component.dart';
 import '../details/details_view.dart';
 import '../privacy_policy/privacy_policy.dart';
+import 'package:collection/collection.dart';
 // Other imports...
 
 class HomeView extends StatefulWidget {
@@ -42,14 +43,7 @@ class _HomeViewState extends State<HomeView> {
     fetchUserRole();
   }
 
-  // Future<void> logout() async {
-  //   // Add logout logic here (e.g., sign out the user)
-  //   // ...
-  //   widget.prefs!.setBool('userLoggedIn', false);
-  //   Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(builder: (context) => LoginScreen(prefs: widget.prefs)),
-  //   );
-  // }
+
   Future<bool> _checkIfUserHasViewedBook(String bookId) async {
     try {
       final User? currentUser = _auth.currentUser;
@@ -181,7 +175,7 @@ class _HomeViewState extends State<HomeView> {
                       value: 'Option 1',
                       child: Row(
                         children: [
-                          Icon(Icons.privacy_tip,color: AppColors.colorPrimary),
+                          Icon(Icons.privacy_tip,color: AppColors.textBackgroundColor),
                           SizedBox(width: 10,),
                           Text('Privacy Policy',style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
@@ -197,7 +191,7 @@ class _HomeViewState extends State<HomeView> {
                       },
                       child: Row(
                         children: [
-                          Icon(Icons.logout,color: AppColors.colorPrimary),
+                          Icon(Icons.logout,color: AppColors.textBackgroundColor),
                           SizedBox(width: 10,),
                           Text('Logout',style:GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
@@ -210,7 +204,7 @@ class _HomeViewState extends State<HomeView> {
                       value: 'Option 3',
                       child: Row(
                         children: [
-                          Icon(Icons.account_balance_wallet_outlined,color: AppColors.colorPrimary),
+                          Icon(Icons.account_balance_wallet_outlined,color: AppColors.textBackgroundColor),
                           SizedBox(width: 10,),
                           Text('About',style:GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
@@ -224,7 +218,7 @@ class _HomeViewState extends State<HomeView> {
                       value: 'Option 4',
                       child: Row(
                         children: [
-                          Icon(Icons.manage_accounts,color: AppColors.colorPrimary),
+                          Icon(Icons.manage_accounts,color: AppColors.textBackgroundColor),
                           SizedBox(width: 10,),
                           Text('Book Management',style:GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
@@ -240,19 +234,21 @@ class _HomeViewState extends State<HomeView> {
 
           ],
           elevation: 0,
-          backgroundColor: AppColors.colorPrimary,
+          backgroundColor: AppColors.containerBackgroundColor,
         ),
         body: Container(
           height: 800,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                AppColors.fontColorWhite.withOpacity(0.3),
-                AppColors.colorPrimary.withOpacity(0.9),
-              ],
-            ),
+            color: AppColors.containerBackgroundColor
+            // gradient: LinearGradient(
+            //   begin: Alignment.centerLeft,
+            //   end: Alignment.centerRight,
+            //   colors: [
+            //     AppColors.colorPrimary.withOpacity(0.1),
+            //     AppColors.colorPrimary.withOpacity(0.9),
+            //   ],
+            // ),
+
           ),
           // Your gradient and other UI elements...
           child:  SingleChildScrollView(
@@ -262,7 +258,7 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 //SizedBox(height: 10),
                 Container(
-                  decoration: BoxDecoration(color: AppColors.colorPrimary),
+                  decoration: BoxDecoration(color: AppColors.containerBackgroundColor),
                     width: double.infinity,
                     height: 150,
                     child: ImageSlider()),
@@ -276,7 +272,6 @@ class _HomeViewState extends State<HomeView> {
                       fontSize: 16,
                       color: AppColors.fontColorDark)),
                 ),
-
                 SizedBox(height: 40),
                 StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection('books').snapshots(),
@@ -287,78 +282,114 @@ class _HomeViewState extends State<HomeView> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     }
-
                     final documents = snapshot.data!.docs;
-
-                    List<BookListEntity> books = documents.map((document) {
-                      final data = document.data() as Map<String, dynamic>;
-                      final title = data['title'] ?? 'No Title';
-                      final author = data['author'] ?? 'No Author';
-                      final imageUrl = data['image_url'];
-                      final chaptersData = data['chapters'];
-                      final bookId = document.id;
-
-
-                      List<ChapterEntity> chapters = [];
-
-                      if (chaptersData != null && chaptersData is List) {
-                        chapters = chaptersData.map((chapterData) {
-                          return ChapterEntity(
-                            name: chapterData['name'],
-                            story: chapterData['story'],
-                          );
-                        }).toList();
-                      }
-
-                      return BookListEntity(
-                        title: title,
-                        author: author,
-                        imageUrl: imageUrl,
-                        chapters: chapters,
-                        id: document.id,
-                      );
-                    }).toList();
-
-                    return Container(
-                      height: 400,
-                      child: GridView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: books.length,
-                        gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisSpacing: 24,
-                             crossAxisSpacing: 7,
-                             crossAxisCount: 3,
-                          childAspectRatio: 0.7,
-                        ),
-                        itemBuilder: (context, index) {
-                          final book = books[index];
-                          return InkResponse(
-                            onTap: ()   {
-
-                              _handleBookTap(book.id!);
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailsView(
-                                    title: book.title,
-                                    author: book.author,
-                                    imageUrl: book.imageUrl,
-                                    chapters: book.chapters,
-                                    selectedCount: book.selectedCount,
-                                    bookId: book.id!, // Pass the bookId
-                                  ),
-                                ),
-                              );
-                              // Increment the count in Firestore
-                            },
-                            child: BookItemComponent(
-                              bookListEntityList: books[index],),
-                          );
-                        },),
+                    // Group books by title
+                    final groupedBooks = groupBy(
+                      documents,
+                          (document) => (document.data() as Map<String, dynamic>)['title'],
                     );
-                    },
+                    return Column(
+                      children: groupedBooks.entries.map((entry) {
+                        final title = entry.key;
+                        final books = entry.value;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    title ?? 'No Title',
+                                    style:  TextStyle(
+                                      color: AppColors.fontColorWhite,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Show all',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: AppColors.fontColorWhite,
+                                        ),
+                                      ),
+                                      Icon(Icons.arrow_forward_ios_sharp,size: 10,color: AppColors.fontColorWhite,)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 150, // Adjust the height as needed
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: books.length,
+                                itemBuilder: (context, index) {
+                                  final document = books[index];
+                                  final data = document.data() as Map<String, dynamic>;
+                                  final author = data['author'] ?? 'No Author';
+                                  final bookName = data['book_name'] ?? 'No Book Name';
+                                  final imageUrl = data['image_url'] ?? '';
+                                  final chaptersData = data['chapters'];
+                                  final bookId = document.id;
+                                  final selectedCount = data['selectedCount'] ?? 0;
+
+                                  List<ChapterEntity> chapters = [];
+                                  if (chaptersData != null && chaptersData is List) {
+                                    chapters = chaptersData.map((chapterData) {
+                                      return ChapterEntity(
+                                        name: chapterData['name']?? 'No Name',
+                                        story: chapterData['story']?? 'No Story',
+                                      );
+                                    }).toList();
+                                  }
+                                  return Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 6.0),
+                                    width: 120,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _handleBookTap(bookId);
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => DetailsView(
+                                              title: title ?? 'No Title',
+                                              author: author,
+                                              bookName: bookName,
+                                              imageUrl: imageUrl,
+                                              chapters: chapters,
+                                              selectedCount: selectedCount,
+                                              bookId: bookId,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: BookItemComponent(
+                                        bookListEntityList: BookListEntity(
+                                          title: title,
+                                          author: author,
+                                          imageUrl: imageUrl,
+                                          chapters: chapters,
+                                          id: bookId,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    );
+                  },
                 ),
               ],
             ),

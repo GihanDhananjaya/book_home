@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +11,7 @@ import '../../../common/app_button.dart';
 import '../../../common/app_password_field.dart';
 import '../../../common/app_text_field.dart';
 import '../../../utils/app_colors.dart';
+import '../../profile_view/widget/profile_image.dart';
 import '../login/login_view.dart';
 
 class RegistrationLoginScreen extends StatefulWidget {
@@ -29,6 +33,7 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
   String _userRole = 'User';
 
   bool _isRegistering = false;
+  Uint8List? _profileImage;
 
   void _registerUser() async {
     if (_password != _confirmPassword) {
@@ -46,6 +51,14 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
 
       final User? user = userCredential.user;
       if (user != null) {
+        // Upload the profile image to Firebase Storage
+        if (_profileImage != null) {
+          final Reference storageRef = FirebaseStorage.instance.ref().child('profile_images').child('${user.uid}.jpg');
+          final UploadTask uploadTask = storageRef.putData(_profileImage!);
+          await uploadTask.whenComplete(() async {
+            _profileImageURL = await storageRef.getDownloadURL();
+          });
+        }
         // Firebase Firestore එකට user data ඇතුලත් කරනවා
         await _firestore.collection('users').doc(user.uid).set({
           'userName': _userName,
@@ -100,6 +113,7 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
       _userName = '';
       _phoneNumber = '';
       _profileImageURL = '';
+      _profileImage = null;
     });
   }
 
@@ -108,13 +122,14 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
     return Scaffold(
 
       body: Container(
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.5),
+              AppColors.colorPrimary.withOpacity(0.1),
+              AppColors.colorPrimary.withOpacity(0.9),
             ],
           ),
         ),
@@ -130,6 +145,16 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
                     color: AppColors.fontColorDark)),
 
                 SizedBox(height: 20),
+                SizedBox(height: 20),
+                ProfileImage(
+                  title: 'Profile Image',
+                  url: _profileImageURL,
+                  onChanged: (imageData, extension) {
+                    setState(() {
+                      _profileImage = imageData;
+                    });
+                  },
+                ),
                 AppTextField(
                   onTextChanged: (value) {
                     setState(() {
@@ -167,6 +192,18 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
                 ),
                 SizedBox(height: 10),
                 // Add Dropdown for User Role
+
+
+                SizedBox(height: 10),
+                AppPasswordField(
+                  onTextChanged: (value) {
+                    setState(() {
+                      _confirmPassword = value;
+                    });
+                  },
+                  hint: "Confirm Password",
+                ),
+                SizedBox(height: 10),
                 DropdownButton<String>(
                   value: _userRole,
                   onChanged: (String? newValue) {
@@ -182,17 +219,7 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
                     );
                   }).toList(),
                 ),
-
-                SizedBox(height: 10),
-                AppPasswordField(
-                  onTextChanged: (value) {
-                    setState(() {
-                      _confirmPassword = value;
-                    });
-                  },
-                  hint: "Confirm Password",
-                ),
-                SizedBox(height: 250,),
+                SizedBox(height: 30,),
                 // ElevatedButton(
                 //   onPressed: _isRegistering ? null : _registerUser,
                 //   child: _isRegistering
@@ -201,7 +228,8 @@ class _RegistrationLoginScreenState extends State<RegistrationLoginScreen> {
                 // ),
                 ElevatedButton(
                   onPressed: _isRegistering ? null : _registerUser,
-                  child: _isRegistering ? CircularProgressIndicator() : Text('Register'),
+                  child: _isRegistering ? CircularProgressIndicator() : Text('Register',
+                      style: TextStyle(color: AppColors.appColorAccent)),
                 ),
               ],
             ),

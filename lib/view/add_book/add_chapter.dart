@@ -23,14 +23,15 @@ class _AddChapterViewState extends State<AddChapterView> {
       appBar: BookAppBar(title: 'Add Chapter'),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft, // Start from the bottom-left corner
-            end: Alignment.centerRight,     // End at the top-right corner
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-              AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            ],
-          ),
+            color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+          //   end: Alignment.centerRight,     // End at the top-right corner
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+          //   ],
+          // ),
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -45,10 +46,12 @@ class _AddChapterViewState extends State<AddChapterView> {
                 Container(
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.appColorAccent)),
+                      border: Border.all(color: AppColors.fontBackgroundColor)),
                   height: 550,
                   width: double.infinity,
                   child: TextField(
+                    cursorColor: AppColors.fontColorWhite,
+                    style: TextStyle(color: AppColors.fontColorWhite),
                     controller: _storyController, // Use a TextField for story input
                     decoration: InputDecoration(
                       hintText: "Story",
@@ -58,6 +61,8 @@ class _AddChapterViewState extends State<AddChapterView> {
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(AppColors.textBackgroundColor),),
                   onPressed: () {
                     final chapterNumber = _chapterNumberController.text;
                     final story = _storyController.text;
