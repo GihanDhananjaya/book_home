@@ -32,6 +32,9 @@ class _ProfileViewState extends State<ProfileView> {
   String? userEmail;
   String? userMobileNumber;
   String? imageUrl;
+  int? follower;
+  int? followedCount;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -55,12 +58,26 @@ class _ProfileViewState extends State<ProfileView> {
         DocumentSnapshot userData =
         await _firestore.collection('users').doc(user.uid).get();
 
+        // Fetch followers data
+        QuerySnapshot followersSnapshot = await _firestore
+            .collection('users')
+            .where('followers', arrayContains: user.uid)
+            .get();
+
+        // Fetch followedCount
+        DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(user.uid).get();
+
+
         setState(() {
           // Set the text fields with user details
           userName = userData['userName'] ?? '';
           userEmail = user.email ?? '';
           userMobileNumber = userData['phoneNumber'] ?? '';
           imageUrl = userData['profileImageURL'] ?? '';
+          //follower = followersSnapshot.docs.length;
+          follower = userDoc['followers']?.length  ?? 0;
+          followedCount = userDoc['followedCount']?.length ?? 0;
         });
       }
     } catch (error) {
@@ -152,13 +169,13 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     Column(
                       children: [
-                        Text('254',style: TextStyle(color: AppColors.fontColorWhite)),
+                        Text(follower?.toString() ?? '0',style: TextStyle(color: AppColors.fontColorWhite,fontWeight: FontWeight.w500)),
                         Text('Followers',style: TextStyle(color: AppColors.fontColorWhite)),
                       ],
                     ),
                     Column(
                       children: [
-                        Text('54',style: TextStyle(color: AppColors.fontColorWhite)),
+                        Text('$followedCount',style: TextStyle(color: AppColors.fontColorWhite,fontWeight: FontWeight.w500)),
                         Text('Following',style: TextStyle(color: AppColors.fontColorWhite)),
                       ],
                     )

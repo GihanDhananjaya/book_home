@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/app_bar.dart';
 import '../../entity/book_list_entity.dart';
 import '../../entity/chapter_entity.dart';
+import '../../entity/image_entity.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
 import '../about/about_view.dart';
@@ -16,6 +17,7 @@ import '../athentication/login/login_view.dart';
 import '../book_list/book_list_view.dart';
 import '../book_list/widget/book_list_component.dart';
 import '../details/details_view.dart';
+import '../members/member_view.dart';
 import '../privacy_policy/privacy_policy.dart';
 import 'package:collection/collection.dart';
 // Other imports...
@@ -34,6 +36,17 @@ class _HomeViewState extends State<HomeView> {
   bool _isAdmin = false;
   String? _userName; // To store the user's name
 
+  List<ImageEntity> imageList = [
+    ImageEntity(image: AppImages.capture1),
+    ImageEntity(image: AppImages.capture2),
+    ImageEntity(image: AppImages.capture3),
+    ImageEntity(image: AppImages.capture4),
+    ImageEntity(image: AppImages.capture5),
+    ImageEntity(image: AppImages.capture6),
+    // Add more image paths here
+  ];
+
+
   @override
   void initState() {
     setState(() {});
@@ -42,7 +55,6 @@ class _HomeViewState extends State<HomeView> {
     _fetchUserData();
     fetchUserRole();
   }
-
 
   Future<bool> _checkIfUserHasViewedBook(String bookId) async {
     try {
@@ -139,6 +151,11 @@ class _HomeViewState extends State<HomeView> {
           MaterialPageRoute(builder: (context) => BookListView()),
         );
         break;
+      case 'Option 5':
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => MemberView()),
+        );
+        break;
     }
   }
 
@@ -227,6 +244,19 @@ class _HomeViewState extends State<HomeView> {
                         ],
                       ),
                     ),
+                    PopupMenuItem<String>(
+                      value: 'Option 5',
+                      child: Row(
+                        children: [
+                          Icon(Icons.supervised_user_circle,color: AppColors.textBackgroundColor),
+                          SizedBox(width: 10,),
+                          Text('Members',style:GoogleFonts.inter(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11,
+                              color: AppColors.fontColorGray)),
+                        ],
+                      ),
+                    ),
                   ];
                 },
               ),
@@ -260,19 +290,34 @@ class _HomeViewState extends State<HomeView> {
                 Container(
                   decoration: BoxDecoration(color: AppColors.containerBackgroundColor),
                     width: double.infinity,
-                    height: 150,
-                    child: ImageSlider()),
-
-                SizedBox(height: 40),
+                    height: 230,
+                    child: ImageSlider(
+                    )),
 
                 Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Text('Trending now...',style: GoogleFonts.poppins(
+                  padding: const EdgeInsets.only(left: 8.0,bottom: 8),
+                  child: Text('Category...',style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: AppColors.fontColorDark)),
+                      color: AppColors.fontColorWhite)),
                 ),
-                SizedBox(height: 40),
+
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: imageList.length,
+                    itemBuilder: (context, index) {
+                         return Container(
+
+                           width: 70,
+                           height: 50,
+                           child: Image.asset(imageList[index].image,),
+                         );
+                     },),
+                ),
+                SizedBox(height: 30),
                 StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection('books').snapshots(),
                   builder: (context, snapshot) {

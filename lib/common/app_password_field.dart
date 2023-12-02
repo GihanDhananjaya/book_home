@@ -58,7 +58,7 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
       children: [
         Text(
           '${widget.hint}${widget.isCurrency! ? ' (Rs)' : ''}',
-          style: TextStyle(fontSize: 12.5, color: AppColors.fontLabelGray),
+          style: TextStyle(fontSize: 12.5, color: AppColors.fontColorWhite),
         ),
         const SizedBox(
           height: 2,
@@ -109,6 +109,7 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
+            color: AppColors.fontColorWhite
           ),
           keyboardType: widget.inputType ?? TextInputType.text,
           decoration: InputDecoration(
@@ -125,14 +126,14 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide:
-                const BorderSide(color: AppColors.colorPrimary, width: 1.0),
+                const BorderSide(color: AppColors.primaryBackgroundColor, width: 1.0),
                 borderRadius: BorderRadius.all(
                   Radius.circular(borderRadius),
                 ),
               ),
               border: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: AppColors.colorDisableWidget, width: 1.0),
+                    color: AppColors.primaryBackgroundColor, width: 1.0),
                 borderRadius: BorderRadius.all(
                   Radius.circular(borderRadius),
                 ),
@@ -152,13 +153,13 @@ class _AppPasswordFieldState extends State<AppPasswordField> {
                     obscureText ? Icons.visibility_off : Icons.visibility,
                     color: obscureText
                         ? AppColors.colorDisableWidget
-                        : AppColors.colorPrimary,
+                        : AppColors.primaryBackgroundColor,
                   )),
               filled: true,
               hintStyle: TextStyle(
-                  color: AppColors.colorDisableWidget,
+                  color: AppColors.fontColorWhite,
                   fontSize: 14),
-              fillColor: Colors.white),
+              fillColor: AppColors.textBackgroundColor),
         ),
       ],
     );

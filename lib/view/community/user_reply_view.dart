@@ -62,14 +62,15 @@ class _UserReplyViewState extends State<UserReplyView> {
           title: 'User Reply'),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.8),
-            ],
-          ),
+            color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),
+          //     AppColors.colorPrimary.withOpacity(0.8),
+          //   ],
+          // ),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -115,7 +116,9 @@ class _UserReplyViewState extends State<UserReplyView> {
                               return Padding(
                                 padding: const EdgeInsets.all(20.0),
                                 child: Container(
-                                  decoration: BoxDecoration(border: Border.all(color: AppColors.appColorAccent)),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.textBackgroundColor,
+                                      border: Border.all(color: AppColors.fontBackgroundColor)),
                                   width: double.infinity,
                                   height: 100,
                                   child: Padding(
@@ -149,13 +152,16 @@ class _UserReplyViewState extends State<UserReplyView> {
                                               Text(userName,style: GoogleFonts.poppins(
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 16,
-                                                  color: AppColors.fontColorDark)),
+                                                  color: AppColors.fontColorWhite)),
                                             ],
                                           ),
                                           SizedBox(height: 10),
                                           Padding(
                                             padding: EdgeInsets.only(left: 12),
-                                            child: Text(replyText),
+                                            child: Text(replyText,style: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: AppColors.fontColorWhite)),
                                           ),
                                         ],
                                       ),

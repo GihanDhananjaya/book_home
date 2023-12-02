@@ -17,18 +17,19 @@ class PrivacyPolicy extends StatelessWidget {
           title: 'Privacy Policy'),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft, // Start from the bottom-left corner
-            end: Alignment.centerRight,     // End at the top-right corner
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-              AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            ],
-          ),
+            color: AppColors.containerBackgroundColor,
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+          //   end: Alignment.centerRight,     // End at the top-right corner
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+          //   ],
+          // ),
         ),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
                 _heading('Data Collection'),
@@ -66,7 +67,7 @@ class PrivacyPolicy extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-              color: AppColors.fontColorDark,
+              color: AppColors.fontColorWhite,
               fontSize: 18,
               fontWeight: FontWeight.bold),
         ),
@@ -82,7 +83,7 @@ class PrivacyPolicy extends StatelessWidget {
       text,
       textAlign: TextAlign.justify,
       style: TextStyle(
-          color: AppColors.fontColorDark,
+          color: AppColors.fontColorWhite,
           fontSize: 16,
           fontWeight: FontWeight.w400),
     );

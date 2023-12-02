@@ -21,6 +21,7 @@ class AppColors {
   static const Color textBackgroundColor = Color(0xFF3e5f6d);
   static const Color fontBackgroundColor = Color(0xFF55939e);
   static const Color primaryBackgroundColor = Color(0xFF6dc7d0);
+  static const Color primaryYellowColor = Color(0xFFFFA500);
 
   static const Color colorSuccess = Colors.green;
   static const Color colorFailed = Colors.red;

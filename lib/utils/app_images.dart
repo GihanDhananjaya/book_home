@@ -14,6 +14,8 @@ class AppImages {
   static const String camera = 'images/png/camera.png';
   static const String appMenu = 'images/png/app_menu_circle.png';
   static const String appBookImg = 'images/png/app_book_img.png';
+  static const String appFollow = 'images/png/follow_img.png';
+  static const String appFollowing = 'images/png/following_img.png';
 
 
   static const String appAd1 = 'images/png/add_img.png';
@@ -30,5 +32,11 @@ class AppImages {
   static const String appSentImg = 'images/png/app_sent_img.png';
   static const String appNotification = 'images/png/app_notification.png';
 
+  static const String capture1 = 'images/png/Capture1.png';
+  static const String capture2 = 'images/png/Capture2.png';
+  static const String capture3 = 'images/png/Capture3.png';
+  static const String capture4 = 'images/png/Capture4.png';
+  static const String capture5 = 'images/png/Capture5.png';
+  static const String capture6 = 'images/png/Capture6.png';
 
 }

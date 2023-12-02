@@ -19,14 +19,15 @@ class About extends StatelessWidget {
       body: Container(
         height: double.infinity,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft, // Start from the bottom-left corner
-            end: Alignment.centerRight,     // End at the top-right corner
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-              AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            ],
-          ),
+          color: AppColors.containerBackgroundColor,
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
+          //   end: Alignment.centerRight,     // End at the top-right corner
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
+          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
+          //   ],
+          // ),
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -37,7 +38,7 @@ class About extends StatelessWidget {
                   text: TextSpan(
                       text: 'Book Home\n\n',
                       style: const TextStyle(
-                          color: AppColors.fontColorDark,
+                          color: AppColors.fontColorWhite,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                       children: [
@@ -50,7 +51,7 @@ class About extends StatelessWidget {
                               'උද්යෝගිමත් පොත් කියවීමේ අත්දැකීමක් සමගින් ඔබට නිසැක විනෝදයක් '
                               'ලබාගැනීමට සැකසූ Book Home.\n\n',
                           style: TextStyle(
-                              color: AppColors.fontColorDark,
+                              color: AppColors.fontColorWhite,
                               fontSize: 16,
                               fontWeight: FontWeight.w400),
                         ),
@@ -64,7 +65,7 @@ class About extends StatelessWidget {
                                 "5. Book Home යෙදවුම තුලින් ඔබට  ඔබගේ මානසික පීඩනය දුරු කොට විනෝදය ලබා ගැනීමට "
                                     "අවශ්‍ය මඟ පෙන්වීම සිදු කරයි.\n\n",
                             style: TextStyle(
-                                color: AppColors.fontColorDark,
+                                color: AppColors.fontColorWhite,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400)),
                         const TextSpan(
@@ -73,7 +74,7 @@ class About extends StatelessWidget {
                               'අපගේ අරමුණයි. වැඩිදුර විස්තර, '
                               'සහය හා විමසීම් සඳහා',
                           style: TextStyle(
-                              color: AppColors.fontColorDark,
+                              color: AppColors.fontColorWhite,
                               fontSize: 16,
                               fontWeight: FontWeight.w400),
                         ),
@@ -88,14 +89,14 @@ class About extends StatelessWidget {
 
                               },
                             style: const TextStyle(
-                                color: AppColors.colorPrimary,
+                                color: AppColors.fontColorWhite,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400),
                             children: const [
                               TextSpan(
                                 text: ' හරහා සම්බන්ධ වන්න.',
                                 style: TextStyle(
-                                    color: AppColors.fontColorDark,
+                                    color: AppColors.fontColorWhite,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400),
                               ),

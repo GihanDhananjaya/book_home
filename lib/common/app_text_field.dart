@@ -57,7 +57,7 @@ class _AppTextFieldState extends State<AppTextField> {
       children: [
         Text(
           '${widget.hint}${widget.isCurrency! ? ' (Rs)' : ''}',
-          style: TextStyle(fontSize: 12.5, color: AppColors.fontLabelGray),
+          style: TextStyle(fontSize: 12.5, color: AppColors.fontColorWhite),
         ),
         const SizedBox(
           height: 2,
@@ -106,6 +106,7 @@ class _AppTextFieldState extends State<AppTextField> {
             LengthLimitingTextInputFormatter(widget.maxLength),
           ],
           style: const TextStyle(
+            color: AppColors.fontColorWhite,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -117,14 +118,14 @@ class _AppTextFieldState extends State<AppTextField> {
               counterText: "",
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(
-                    color: AppColors.colorDisableWidget, width: 1.0),
+                    color: AppColors.primaryBackgroundColor, width: 1.0),
                 borderRadius: BorderRadius.all(
                   Radius.circular(borderRadius),
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide:
-                const BorderSide(color: AppColors.colorPrimary, width: 1.0),
+                const BorderSide(color: AppColors.primaryBackgroundColor, width: 1.0),
                 borderRadius: BorderRadius.all(
                   Radius.circular(borderRadius),
                 ),
@@ -143,8 +144,8 @@ class _AppTextFieldState extends State<AppTextField> {
               suffixIcon: widget.action,
               filled: true,
               hintStyle:
-              TextStyle(color: AppColors.colorDisableWidget, fontSize: 14),
-              fillColor: Colors.white),
+              TextStyle(color: AppColors.fontColorWhite, fontSize: 14),
+              fillColor: AppColors.textBackgroundColor),
         ),
       ],
     );

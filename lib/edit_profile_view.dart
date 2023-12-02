@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:book_home/utils/app_colors.dart';
 import 'package:book_home/view/add_book/add_chapter.dart';
+import 'package:book_home/view/chapter/edit_chapter_view.dart';
 import 'package:book_home/view/notification_view/local_notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -315,25 +316,60 @@ class _EditProfileViewState extends State<EditProfileView> {
                 SizedBox(height: 20),
                 // Display Chapters
                 if (widget.chapters.isNotEmpty)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Chapters:',
-                        style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.fontColorWhite),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widget.chapters.length,
-                        itemBuilder: (context, index) {
-                          final chapter = widget.chapters[index];
-                          return ListTile(
-                            title: Text('Name: ${chapter.name}',style: TextStyle(color: AppColors.fontColorWhite)),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Chapters:',
+                          style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.fontColorWhite),
+                        ),
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: widget.chapters.length,
+                          itemBuilder: (context, index) {
+                            final chapter = widget.chapters[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Name: ${chapter.name}',style: TextStyle(color: AppColors.fontColorWhite)),
+                                      InkResponse(
+                                          onTap: () async {
+                                            final editedChapter = await Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => EditChapterView(
+                                                  chapterName: chapter.name,
+                                                  chapterStory: chapter.story,
+                                                ),
+                                              ),
+                                            );
 
-                          );
-                        },
-                      ),
-                    ],
+                                            // Check if the chapter was edited and update the chapter in the list.
+                                            if (editedChapter != null) {
+                                              setState(() {
+                                                chapter.name = editedChapter.name;
+                                                chapter.story = editedChapter.story;
+                                              });
+                                            }
+                                          },
+                                          child: Icon(Icons.edit,color: AppColors.fontColorWhite,))
+                                    ],
+
+                                  ),
+                                  SizedBox(height: 10,)
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 // AppButton(
                 //   buttonText: 'Update',

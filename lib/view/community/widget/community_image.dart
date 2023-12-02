@@ -1,32 +1,27 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
-import '../../../../../../utils/app_colors.dart';
-import '../../../../../../utils/app_images.dart';
-import '../../../../common/app_button.dart';
+import '../../../../../utils/app_colors.dart';
+import '../../../common/app_button.dart';
 
-class CommunityImage extends StatefulWidget {
+class CoverImage extends StatefulWidget {
   final String? url;
-  final String? title;
-  final String? subtitle;
-  final Function(Uint8List?, String?)? onChanged;
+  final Function(File?, String?)? onChanged;
 
-  const CommunityImage({
+  const CoverImage({
     Key? key,
-    this.title,
     this.onChanged,
     this.url,
-    this.subtitle,
   }) : super(key: key);
 
   @override
-  _CommunityImageState createState() => _CommunityImageState();
+  _CoverImageState createState() => _CoverImageState();
 }
 
-class _CommunityImageState extends State<CommunityImage> {
+class _CoverImageState extends State<CoverImage> {
   File? _image;
   String? _extension;
 
@@ -61,6 +56,8 @@ class _CommunityImageState extends State<CommunityImage> {
                   onTapButton: () {
                     Navigator.pop(context);
                   },
+                  buttonColor: AppColors.colorPrimary,
+                  textColor: AppColors.colorFailed,
                 )
               ],
             ),
@@ -72,107 +69,75 @@ class _CommunityImageState extends State<CommunityImage> {
 
   Future getImage(int selectionMode) async {
     final pickedFile = await ImagePicker().pickImage(
-        source:
-        selectionMode == 0 ? ImageSource.camera : ImageSource.gallery);
+      source: selectionMode == 0 ? ImageSource.camera : ImageSource.gallery,
+    );
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
         _extension = p.extension(pickedFile.path);
         if (widget.onChanged != null) {
-          final bytes = _image!.readAsBytesSync();
-          widget.onChanged!(bytes, _extension);
+          widget.onChanged!(_image, _extension);
         }
       } else {
         print('No image selected.');
       }
-    }
-    );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          children: [
-            CircleAvatar(
-              radius: 31,
-              backgroundColor: AppColors.fontColorWhite,
-              child: CircleAvatar(
-                backgroundColor: AppColors.fontColorWhite,
-                radius: 31,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white, // Set the border color to white
-                      width: 4.0, // Adjust the border width as needed
-                    ),
-                  ),
-                  child: _image != null
-                      ? ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.file(
-                      _image!,
-                      width: 60.w,
-                      height: 60.h,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                      : widget.url != null
-                      ? ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.network(
-                      widget.url!,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                      : const Icon(Icons.person, size: 50),
+        Stack(children: [
+          Container(
+            decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(10)),
+            width: 100,
+            height: 60,
+            child: Container(
+              decoration: BoxDecoration(color: AppColors.textBackgroundColor, borderRadius: BorderRadius.circular(10)),
+              width: 100,
+              height: 60,
+              child: _image != null
+                  ? Container(
+                width: 90,
+                height: 60,
+                child: Image.file(
+                  _image!,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
                 ),
-              ),
+              )
+                  : widget.url != null
+                  ? ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.network(
+                  widget.url!,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : const Icon(Icons.book, size: 10, color: AppColors.fieldBackgroundColor),
             ),
-            Positioned(
-              bottom: 10,
-              right: 5,
-              child: GestureDetector(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(70),
-                    color: AppColors.colorPrimary,
-                  ),
-                  height: 40.h,
-                  width: 40.w,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(''),
-                  ),
-                ),
-                onTap: () {
-                  showImagePickerDialog();
-                },
+          ),
+          Positioned(
+            bottom: 2,
+            right: 1,
+            child: GestureDetector(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30), color: AppColors.primaryBackgroundColor),
+                height: 20,
+                width: 20,
+                child: Icon(Icons.add_a_photo, size: 15),
               ),
-            )
-          ],
-        ),
-        SizedBox(height: 10.h),
-        Column(
-          children: [
-            Text(widget.title!,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 24,
-                    color: AppColors.fontColorDark)),
-            SizedBox(height: 10),
-            Text(widget.subtitle!,
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                    color: AppColors.fontColorDark)),
-          ],
-        ),
-        SizedBox(height: 10.h),
+              onTap: () {
+                showImagePickerDialog();
+              },
+            ),
+          )
+        ]),
       ],
     );
   }

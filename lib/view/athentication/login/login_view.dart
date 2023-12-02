@@ -109,14 +109,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.5),
-            ],
-          ),
+            color: AppColors.containerBackgroundColor
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),
+          //     AppColors.colorPrimary.withOpacity(0.5),
+          //   ],
+          // ),
         ),
         child: Padding(
           padding: EdgeInsets.all(26.0),
@@ -128,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text('Login',style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 26,
-                  color: AppColors.fontColorDark)),
+                  color: AppColors.fontColorWhite)),
 
 
               AppTextField(
@@ -179,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // ),
               Spacer(),
               ElevatedButton(
+                style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(AppColors.textBackgroundColor) ),
                 onPressed: (){
                   Navigator.push(
                     context,
@@ -187,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   );
                 },
-                child: Text('Create New Account',style: TextStyle(color: AppColors.appColorAccent)),
+                child: Text('Create New Account',style: TextStyle(color: AppColors.fontColorWhite)),
               ),
             ],
           ),

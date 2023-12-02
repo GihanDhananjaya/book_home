@@ -101,8 +101,11 @@ class _NotificationViewState extends State<NotificationView> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                        height: 60,width: 40,
-                                        child: Image.network(notificationData['image_url'], fit: BoxFit.fill,)),
+                                        height: 50,width: 50,
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(40),
+                                            child: Image.network(notificationData['image_url'], fit: BoxFit.fill,))),
                                     SizedBox(width: 5),
                                     Expanded(
                                       child: Column(

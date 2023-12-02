@@ -7,15 +7,32 @@ import '../../utils/app_colors.dart';
 import '../notification_view/local_notification.dart';
 
 
-class AddChapterView extends StatefulWidget {
+class EditChapterView extends StatefulWidget {
+
+  final String chapterName;
+  final String chapterStory;
+
+  EditChapterView({
+    required this.chapterName,
+    required this.chapterStory,
+  });
+
+
   @override
-  _AddChapterViewState createState() => _AddChapterViewState();
+  _EditChapterViewState createState() => _EditChapterViewState();
 }
 
-class _AddChapterViewState extends State<AddChapterView> {
+class _EditChapterViewState extends State<EditChapterView> {
   final TextEditingController _chapterNumberController = TextEditingController();
   final TextEditingController _storyController = TextEditingController();
 
+
+  @override
+  void initState() {
+    super.initState();
+    _chapterNumberController.text = widget.chapterName;
+    _storyController.text = widget.chapterStory;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +41,6 @@ class _AddChapterViewState extends State<AddChapterView> {
       body: Container(
         decoration: BoxDecoration(
             color: AppColors.containerBackgroundColor
-          // gradient: LinearGradient(
-          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
-          //   end: Alignment.centerRight,     // End at the top-right corner
-          //   colors: [
-          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-          //   ],
-          // ),
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -76,7 +85,7 @@ class _AddChapterViewState extends State<AddChapterView> {
                       Navigator.of(context).pop(newChapter);
                     }
                   },
-                  child: Text('Submit Chapter',style: TextStyle(color: AppColors.fontColorWhite)),
+                  child: Text('Update Chapter',style: TextStyle(color: AppColors.fontColorWhite)),
                 ),
               ],
             ),
