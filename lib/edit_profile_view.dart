@@ -273,14 +273,19 @@ class _EditProfileViewState extends State<EditProfileView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Title',style: TextStyle(color: AppColors.fontLabelGray)),
+                    Text('Title',style: TextStyle(color: AppColors.fontColorWhite)),
                     Container(
                       padding: EdgeInsets.only(left: 8),
-                      decoration: BoxDecoration(color: AppColors.fontColorWhite,borderRadius: BorderRadius.all(Radius.circular(8))),
+                      decoration: BoxDecoration(color: AppColors.textBackgroundColor,
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(color: AppColors.primaryBackgroundColor)),
                       width: double.infinity,
                       height: 50,
                       child: DropdownButtonFormField<String>(
-
+                        iconEnabledColor: AppColors.fontColorWhite,
+                        decoration: InputDecoration(fillColor: AppColors.textBackgroundColor,border: InputBorder.none,
+                            counterStyle: TextStyle(color: AppColors.fontColorWhite,)),
+                        style: TextStyle(color: AppColors.fontColorWhite,fontSize: 14,fontWeight: FontWeight.bold),
                         value: _selectedBookTitle,
                         hint: Text('Select Book Title'),
                         items: _getBookTitle(), // Implement this method to get the book titles
@@ -289,6 +294,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                             _selectedBookTitle = value as String?;
                           });
                         },
+                        dropdownColor: AppColors.textBackgroundColor,
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ],

@@ -17,21 +17,23 @@ class AnotherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:  AppBar(
-          backgroundColor: AppColors.colorPrimary,
+        iconTheme: IconThemeData(color: AppColors.fontColorWhite),
+          backgroundColor: AppColors.containerBackgroundColor,
           title: Text('Read Story',style: TextStyle(color: AppColors.fontColorWhite),)
       ),
       body: Container(
         width: double.infinity,
         height: 900,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.fontColorWhite.withOpacity(0.5),
-              AppColors.colorPrimary.withOpacity(0.8),
-            ],
-          ),
+          color: AppColors.containerBackgroundColor,
+          // gradient: LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.fontColorWhite.withOpacity(0.5),
+          //     AppColors.colorPrimary.withOpacity(0.8),
+          //   ],
+          // ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -41,12 +43,12 @@ class AnotherPage extends StatelessWidget {
               children: [
                 Text(
                   'Title: $title',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: AppColors.fontColorWhite),
                 ),
                 SizedBox(height: 10),
-                Text('Chapter Name: $chapterName', style: TextStyle(fontSize: 18)),
+                Text('Chapter Name: $chapterName', style: TextStyle(fontSize: 18,color: AppColors.fontColorWhite)),
                 SizedBox(height: 10),
-                Text('Chapter Story: $chapterStory', style: TextStyle(fontSize: 16)),
+                Text('Chapter Story: $chapterStory', style: TextStyle(fontSize: 16,color: AppColors.fontColorWhite)),
               ],
             ),
           ),
