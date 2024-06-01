@@ -32,14 +32,6 @@ class _NotificationViewState extends State<NotificationView> {
             height: 800,
             decoration: BoxDecoration(
               color: AppColors.containerBackgroundColor,
-              // gradient: LinearGradient(
-              //   begin: Alignment.centerLeft,
-              //   end: Alignment.centerRight,
-              //   colors: [
-              //     AppColors.fontColorWhite.withOpacity(0.5),
-              //     AppColors.colorPrimary.withOpacity(0.9),
-              //   ],
-              // ),
             ),
             child: StreamBuilder<QuerySnapshot>(
               stream: notificationsCollection.snapshots(),
@@ -75,7 +67,8 @@ class _NotificationViewState extends State<NotificationView> {
                           String title = notificationData['title']?? 'No title';
                           //String image = notificationData['image_url']?? 'No Image';
                           String chapterName = notificationData['chapterName']?? 'No chapter name';
-                          String chapterStory = notificationData['latestChapter']['story']?? 'No chapter story';
+                          String chapterStory = notificationData['latestChapter']['story']??
+                              'No chapter story';
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -88,7 +81,7 @@ class _NotificationViewState extends State<NotificationView> {
                         },
                         child: Container(
                           width: double.infinity,
-                          height: 100,
+                          height: 90,
                           decoration: BoxDecoration(border: Border.all(color: AppColors.textBackgroundColor,width: 3),
                               color: AppColors.textBackgroundColor),
                           child:Padding(
@@ -96,49 +89,43 @@ class _NotificationViewState extends State<NotificationView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10),
+                                SizedBox(height: 5),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                        height: 50,width: 50,
+                                        height: 30,width: 30,
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(40)),
                                         child: ClipRRect(
                                             borderRadius: BorderRadius.circular(40),
-                                            child: Image.network(notificationData['image_url'], fit: BoxFit.fill,))),
+                                            child: Image.network(notificationData['image_url'],
+                                              fit: BoxFit.fill,))),
                                     SizedBox(width: 5),
                                     Expanded(
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                notificationData['title'],
-                                                style: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color: AppColors.fontColorWhite,
-                                                ),
-                                              ),
-                                              Text(
-                                                formattedDate,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: AppColors.fontColorWhite,
-                                                ),
-                                              ),
-                                            ],
+                                          Text(
+                                            notificationData['title'],
+                                            style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: AppColors.fontColorWhite,),
                                           ),
                                           Text(
-                                            '${notificationData['latestChapter']['story'].substring(0, 30)}...',
+                                            formattedDate,
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 11,
                                               color: AppColors.fontColorWhite,
                                             ),
                                           ),
+                                          // Text(
+                                          //   '${notificationData['latestChapter']['story'].substring(0, 30)}...',
+                                          //   style: TextStyle(
+                                          //     fontSize: 14,
+                                          //     color: AppColors.fontColorWhite,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),

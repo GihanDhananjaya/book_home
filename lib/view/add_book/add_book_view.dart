@@ -275,7 +275,7 @@ class _AddBookViewState extends State<AddBookView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(width: 10),
-              Text('Create New Chapter',style: GoogleFonts.poppins(
+              Text('Add New Chapter',style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w500,
                   fontSize: 18,
                   color: AppColors.fontColorWhite)),

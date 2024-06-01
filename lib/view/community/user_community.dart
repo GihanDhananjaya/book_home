@@ -118,7 +118,7 @@ class _UserCommunityState extends State<UserCommunity> {
                 padding: const EdgeInsets.all(20.0),
                 child: Container(
                   decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
-                  height: 310,
+                  height: 330,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),

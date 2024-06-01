@@ -112,7 +112,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
       // Define the notification data you want to store.
       final notificationData = {
-        'title': "යාවත් කාලීන කළා $updatedName",
+        'title': "Updated new chapter for $updatedName",
         'image_url': imageUrl,
         'body': widget.chapters.map((chapter) {
           return {
@@ -189,7 +189,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(width: 10),
-            Text('Create New Chapter',style: GoogleFonts.poppins(
+            Text('Add New Chapter',style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w500,
                 fontSize: 18,
                 color: AppColors.fontColorWhite)),
