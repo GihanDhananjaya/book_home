@@ -1,19 +1,10 @@
 import 'dart:typed_data';
 import 'package:book_home/view/profile_view/update_profile_view.dart';
-import 'package:book_home/view/profile_view/widget/profile_image.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../common/app_button.dart';
-import '../../common/app_password_field.dart';
-import '../../common/app_text_field.dart';
-import '../../common/image_upload_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 import '../../utils/app_colors.dart';
-import '../test_notifi/home_screen.dart';
-import '../test_notifi/test_noti.dart';
 
 class ProfileView extends StatefulWidget {
   get prefs => null;
@@ -128,14 +119,6 @@ class _ProfileViewState extends State<ProfileView> {
         height: double.infinity,
         decoration: BoxDecoration(
           color: AppColors.containerBackgroundColor
-          // gradient: LinearGradient(
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          //   colors: [
-          //     AppColors.fontColorWhite.withOpacity(0.5),
-          //     AppColors.colorPrimary.withOpacity(0.8),
-          //   ],
-          // ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(22.0),
@@ -178,7 +161,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     Column(
                       children: [
-                        Text('$followedCount',style: TextStyle(color: AppColors.fontColorWhite,fontWeight: FontWeight.w500)),
+                        Text(followedCount?.toString() ?? '0' ,style: TextStyle(color: AppColors.fontColorWhite,fontWeight: FontWeight.w500)),
                         Text('Following',style: TextStyle(color: AppColors.fontColorWhite)),
                       ],
                     )
@@ -228,6 +211,18 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 SizedBox(height: 50),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.perm_identity,color: AppColors.fontColorWhite),
+                    SizedBox(width: 10),
+                    Text('name :',style: TextStyle(color: AppColors.fontColorWhite)),
+                    SizedBox(width: 10),
+                    Text(userName ?? '',style: TextStyle(color: AppColors.fontColorWhite))
+                  ],
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.email_outlined,color: AppColors.fontColorWhite),
                     SizedBox(width: 10),
@@ -238,6 +233,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
                 SizedBox(height: 20),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(Icons.call,color: AppColors.fontColorWhite),
                     SizedBox(width: 10),
@@ -248,18 +244,18 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
 
                 SizedBox(height: 20),
-                AppButton(
-                  buttonText: 'Update Profile',
-                  onTapButton: _updateUserProfile,
-                ),
-                AppButton(
-                  onTapButton: (){
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(builder: (context) => FirebaseMessaging()),
-                    // );
-                  }, buttonText: 'send noti',
-
-                )
+                // AppButton(
+                //   buttonText: 'Update Profile',
+                //   onTapButton: _updateUserProfile,
+                // ),
+                // AppButton(
+                //   onTapButton: (){
+                //     // Navigator.of(context).push(
+                //     //   MaterialPageRoute(builder: (context) => FirebaseMessaging()),
+                //     // );
+                //   }, buttonText: 'send noti',
+                //
+                // )
               ],
             ),
           ),

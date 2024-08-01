@@ -20,19 +20,9 @@ class _AddChapterViewState extends State<AddChapterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.containerBackgroundColor,
       appBar: BookAppBar(title: 'Add Chapter'),
       body: Container(
-        decoration: BoxDecoration(
-            color: AppColors.containerBackgroundColor
-          // gradient: LinearGradient(
-          //   begin: Alignment.centerLeft, // Start from the bottom-left corner
-          //   end: Alignment.centerRight,     // End at the top-right corner
-          //   colors: [
-          //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-          //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-          //   ],
-          // ),
-        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

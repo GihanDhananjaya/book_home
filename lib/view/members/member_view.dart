@@ -23,6 +23,7 @@ class _MemberViewState extends State<MemberView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.containerBackgroundColor,
       appBar: BookAppBar(
         onBackPressed: () {
           Navigator.pop(context);
@@ -31,10 +32,6 @@ class _MemberViewState extends State<MemberView> {
       ),
       body: Container(
         width: double.infinity,
-        height: 800,
-        decoration: BoxDecoration(
-          color: AppColors.containerBackgroundColor,
-        ),
         child: StreamBuilder<QuerySnapshot>(
           stream: _firestore.collection('users').snapshots(),
           builder: (context, snapshot) {

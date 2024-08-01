@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../entity/book_list_entity.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_images.dart';
+import 'app_image_loader.dart';
 
 class BookItemComponent extends StatelessWidget {
   final BookListEntity bookListEntityList;
@@ -22,22 +23,10 @@ class BookItemComponent extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(6),
-          child: Image.network(
-            bookListEntityList.imageUrl ?? '', // Use the imageUrl here
-            fit: BoxFit.cover,
-            width: 120, // Adjust the width as needed
-            height: 150, // Adjust the height as needed
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              } else {
-                // While the image is loading, display an Icon or any other placeholder widget.
-                return Center(
-                    child: Image.asset(AppImages.appBookImg,fit: BoxFit.cover, width: 120, // Adjust the width as needed
-                      height: 150)
-                );
-              }
-            },
+          child: AppImageLoader(
+            image: bookListEntityList.imageUrl ?? '',
+            width: 120,
+            height: 150,
           ),
         ),
       ),

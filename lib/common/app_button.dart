@@ -6,7 +6,7 @@ import '../../../utils/app_colors.dart';
 
 class AppButton extends StatefulWidget {
   final String buttonText;
-  final Function onTapButton;
+  final Function? onTapButton;
   final double width;
   final double? height;
   final Widget? prefixIcon;
@@ -89,7 +89,7 @@ class _AppButtonState extends State<AppButton> {
       onTap: () {
 
           if (widget.onTapButton != null) {
-            widget.onTapButton();
+            widget.onTapButton!();
           }
 
       },

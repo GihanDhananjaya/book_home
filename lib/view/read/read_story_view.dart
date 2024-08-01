@@ -162,25 +162,14 @@ class _ReadStoryViewState extends State<ReadStoryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.containerBackgroundColor,
         appBar: BookAppBar(
             onBackPressed: () {
               Navigator.pop(context);
             },
             title: 'Read Story'),
         body: Container(
-          height: 800,
           width: double.infinity,
-          decoration: BoxDecoration(
-              color: AppColors.containerBackgroundColor
-            // gradient: LinearGradient(
-            //   begin: Alignment.centerLeft, // Start from the bottom-left corner
-            //   end: Alignment.centerRight,     // End at the top-right corner
-            //   colors: [
-            //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-            //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            //   ],
-            // ),
-          ),
           child: SingleChildScrollView(
             child: Column(children: [
               SizedBox(height: 20),

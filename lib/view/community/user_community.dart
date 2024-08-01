@@ -12,6 +12,7 @@ import '../../common/app_button.dart';
 import '../../common/app_text_field.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_images.dart';
+import '../home/widget/app_image_loader.dart';
 
 
 class UserCommunity extends StatefulWidget {
@@ -97,7 +98,8 @@ class _UserCommunityState extends State<UserCommunity> {
 
   @override
   Widget build(BuildContext context) {
-    final firstLetter = _userName?.isNotEmpty ?? false ? _userName!.substring(0, 1).toUpperCase() : 'A';
+    final firstLetter = _userName?.isNotEmpty ?? false ?
+    _userName!.substring(0, 1).toUpperCase() : 'A';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.containerBackgroundColor,
@@ -195,7 +197,7 @@ class _UserCommunityState extends State<UserCommunity> {
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: Text('Lodding ....',style: TextStyle(color: AppColors.fontColorWhite),),
                     );
                   }
                   var communityDocs = snapshot.data!.docs;
@@ -257,11 +259,7 @@ class _UserCommunityState extends State<UserCommunity> {
                                     width: 430,
                                     child: ClipRRect(
                                        borderRadius: BorderRadius.circular(6),
-                                      child: Image.network(
-                                        imageUrl,
-
-                                        fit: BoxFit.cover,
-                                      ),
+                                      child: AppImageLoader(image: imageUrl,),
                                     ),
                                   ),
                                 SizedBox(height: 30),

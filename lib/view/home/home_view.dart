@@ -270,14 +270,6 @@ class _HomeViewState extends State<HomeView> {
           height: 800,
           decoration: BoxDecoration(
             color: AppColors.containerBackgroundColor
-            // gradient: LinearGradient(
-            //   begin: Alignment.centerLeft,
-            //   end: Alignment.centerRight,
-            //   colors: [
-            //     AppColors.colorPrimary.withOpacity(0.1),
-            //     AppColors.colorPrimary.withOpacity(0.9),
-            //   ],
-            // ),
 
           ),
           // Your gradient and other UI elements...
@@ -310,7 +302,6 @@ class _HomeViewState extends State<HomeView> {
                     itemCount: imageList.length,
                     itemBuilder: (context, index) {
                          return Container(
-
                            width: 70,
                            height: 50,
                            child: Image.asset(imageList[index].image,),
@@ -325,7 +316,7 @@ class _HomeViewState extends State<HomeView> {
                       return Text('Error: ${snapshot.error}');
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return Text('Lodding ....',style: TextStyle(color: AppColors.fontColorWhite),);
                     }
                     final documents = snapshot.data!.docs;
                     // Group books by title
@@ -373,6 +364,7 @@ class _HomeViewState extends State<HomeView> {
                             Container(
                               height: 150, // Adjust the height as needed
                               child: ListView.builder(
+                                shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: books.length,
                                 itemBuilder: (context, index) {
@@ -400,7 +392,6 @@ class _HomeViewState extends State<HomeView> {
                                     child: GestureDetector(
                                       onTap: () {
                                         _handleBookTap(bookId);
-
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

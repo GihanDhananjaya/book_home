@@ -80,7 +80,7 @@ class _BottomBarViewState extends State<BottomBarView> {
       backgroundColor: AppColors.colorPrimary,
       body: _getBody(),
       bottomNavigationBar: BottomAppBar(
-        height: 60,
+        height: 67,
         clipBehavior: Clip.hardEdge,
         padding: const EdgeInsets.only(top: 5),
         color: AppColors.containerBackgroundColor,

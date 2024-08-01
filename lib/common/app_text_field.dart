@@ -60,7 +60,7 @@ class _AppTextFieldState extends State<AppTextField> {
           style: TextStyle(fontSize: 12.5, color: AppColors.fontColorWhite),
         ),
         const SizedBox(
-          height: 2,
+          height: 3,
         ),
         TextField(
           onChanged: (text) {
@@ -112,7 +112,7 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
           keyboardType: widget.inputType ?? TextInputType.text,
           decoration: InputDecoration(
-              contentPadding: const EdgeInsets.all(16),
+              contentPadding: const EdgeInsets.all(14),
               isDense: true,
               errorText: widget.errorMessage,
               counterText: "",

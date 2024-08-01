@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../common/app_bar.dart';
 import '../../entity/chapter_entity.dart';
 import '../../utils/app_colors.dart';
+import '../home/widget/app_image_loader.dart';
 import '../read/read_story_view.dart';
 
 class DetailsView extends StatefulWidget {
@@ -55,130 +57,119 @@ class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.containerBackgroundColor,
         appBar: BookAppBar(
             onBackPressed: () {
               Navigator.pop(context);
             },
             title: 'Chapters'),
         body: Container(
-          decoration: BoxDecoration(
-            color: AppColors.containerBackgroundColor
-            // gradient: LinearGradient(
-            //   begin: Alignment.centerLeft, // Start from the bottom-left corner
-            //   end: Alignment.centerRight,     // End at the top-right corner
-            //   colors: [
-            //     AppColors.fontColorWhite.withOpacity(0.5),  // Color from the bottom-left side (light yellow)
-            //     AppColors.colorPrimary.withOpacity(0.8),   // Color from the bottom-left side (green)
-            //   ],
-            // ),
-          ),
           child: SingleChildScrollView(
-            child: Column(children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  width: 130,
-                  decoration: BoxDecoration(border: Border.all(color: AppColors.textBackgroundColor, width: 5)),
-                  child: widget.imageUrl != null
-                      ? Image.network(
-                    widget.imageUrl!,
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                      : Placeholder(), // You can replace Placeholder with any widget you want to show when imageUrl is null
-                ),
-
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(widget.bookName! ?? 'No Data',style: GoogleFonts.dancingScript(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 28,
-                      color: AppColors.fontColorWhite)),
-                ],
-              ),
-              SizedBox(height: 10),
-               Padding(
-                padding: const EdgeInsets.only(left: 30,right: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                      Row(
-                      children: [
-                        Icon(Icons.remove_red_eye,color: AppColors.fontColorWhite),
-                        SizedBox(width: 5),
-                        Text("$selectedCount Views",style: TextStyle(color:AppColors.fontColorWhite),)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.list,color: AppColors.fontColorWhite),
-                        SizedBox(width: 5),
-                        Text("${widget.chapters.length} Parts",style: TextStyle(color:AppColors.fontColorWhite)),
-                      ],
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 200,
+                    width: 130,
+                    decoration: BoxDecoration(border: Border.all(color: AppColors.textBackgroundColor, width: 5)),
+                    child: widget.imageUrl != null
+                        ? AppImageLoader(image: widget.imageUrl!,height: 200,
+                      width: double.infinity,)
+                        : Placeholder(), // You can replace Placeholder with any widget you want to show when imageUrl is null
+                  ),
+
                 ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Container(
-                  decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
-                  height:400,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.chapters.length,
-                    itemBuilder: (context, index) {
-                      return InkResponse(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ReadStoryView(
-                              chapterName: widget.chapters[index].name,
-                              chapterStory: widget.chapters[index].story, title: widget.title!,
-                            )),
-                          );
-                        },
-                        child: Padding(
-                          padding:  EdgeInsets.only(left: 20.0,right: 20,bottom: 8,top: 8),
-                          child: Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: AppColors.textBackgroundColor,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text('Chapter ${index + 1}: ${widget.chapters[index].name}',style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18,
-                                      color: AppColors.fontColorWhite)),
-                                ),
-                              ),
-                              Container(
-                                height: 40,
-                                width: 10,
-                                decoration: BoxDecoration(
-                                    color: AppColors.fontColorWhite.withOpacity(.4),
-                                    borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15))
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                SizedBox(height: 20,),
+                Text(widget.bookName! ?? 'No Data',style: GoogleFonts.dancingScript(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 28,
+                    color: AppColors.fontColorWhite)),
+                SizedBox(height: 20),
+                 Padding(
+                  padding: const EdgeInsets.only(left: 30,right: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                        Row(
+                        children: [
+                          Icon(Icons.remove_red_eye,color: AppColors.fontColorWhite),
+                          SizedBox(width: 5),
+                          Text("$selectedCount Views",style: TextStyle(color:AppColors.fontColorWhite),)
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.list,color: AppColors.fontColorWhite),
+                          SizedBox(width: 5),
+                          Text("${widget.chapters.length} Parts",style: TextStyle(color:AppColors.fontColorWhite)),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ]),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Container(
+                    decoration: BoxDecoration(border: Border.all(color: AppColors.fontColorDark)),
+
+                    width: double.infinity,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: widget.chapters.length,
+                      itemBuilder: (context, index) {
+                        return InkResponse(
+                          onTap: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ReadStoryView(
+                                chapterName: widget.chapters[index].name,
+                                chapterStory: widget.chapters[index].story, title: widget.title!,
+                              )),
+                            );
+                          },
+                          child: Padding(
+                            padding:  EdgeInsets.only(left: 20.0,right: 20,bottom: 8,top: 8),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.textBackgroundColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                    child: Text('${widget.chapters[index].name}',style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 18,
+                                        color: AppColors.fontColorWhite)),
+                                  ),
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.fontColorWhite.withOpacity(.4),
+                                      borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15))
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ]),
+            ),
           ),
         ),
       );

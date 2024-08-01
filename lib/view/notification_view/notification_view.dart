@@ -37,7 +37,7 @@ class _NotificationViewState extends State<NotificationView> {
               stream: notificationsCollection.snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(strokeWidth: 0.5,);
+                  return Text('Lodding ....',style: TextStyle(color: AppColors.fontColorWhite),);
                 }
 
                 if (snapshot.hasError) {

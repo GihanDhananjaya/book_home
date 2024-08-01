@@ -1,4 +1,3 @@
-// Login screen UI
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,30 +63,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> loginUser() async {
     setState(() {
-      _isLogging = true; // Set the flag to true when logging in
+      _isLogging = true;
     });
     try {
-      final UserCredential userCredential =
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final UserCredential userCredential = await
+      _auth.signInWithEmailAndPassword(email: email, password: password);
       final User? user = userCredential.user;
-      String userRole = widget.prefs!.getString('userRole') ?? 'User';
+      //String userRole = widget.prefs!.getString('userRole') ?? 'User';
 
       if (user != null) {
-        setState(() {
+        setState(() {});
 
-        });
         widget.prefs!.setBool('userLoggedIn', true);
-        // Navigate to the home screen or another screen after login
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => BottomBarView(user:user)),
         );
       }
     } catch (e) {
-      // Handle login errors
       String errorMessage = 'An error occurred. Please try again.';
 
-      // You can check the specific error code to display custom messages
       if (e is FirebaseAuthException) {
         if (e.code == 'user-not-found') {
           errorMessage = 'No user found with this email address.';
@@ -95,11 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
           errorMessage = 'Wrong password. Please try again.';
         }
       }
-
       _showErrorDialog(errorMessage);
     }finally {
       setState(() {
-        _isLogging = false; // Set the flag to false when login process completes
+        _isLogging = false;
       });
     }
   }
@@ -107,91 +101,68 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.containerBackgroundColor,
       body: Container(
-        decoration: BoxDecoration(
-            color: AppColors.containerBackgroundColor
-          // gradient: LinearGradient(
-          //   begin: Alignment.centerLeft,
-          //   end: Alignment.centerRight,
-          //   colors: [
-          //     AppColors.fontColorWhite.withOpacity(0.5),
-          //     AppColors.colorPrimary.withOpacity(0.5),
-          //   ],
-          // ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(26.0),
-          child: Column(
-            children: [
 
-              SizedBox(height: 50),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
+            child: Column(
+              children: [
 
-              Text('Login',style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 26,
-                  color: AppColors.fontColorWhite)),
+                SizedBox(height: 50),
+                Text('BOOK HOME',style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 26,
+                    color: AppColors.fontColorWhite)),
+                SizedBox(height: 50),
+                Text('Login',style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 26,
+                    color: AppColors.fontColorWhite)),
 
+                SizedBox(height: 50),
+                AppTextField(
+                    onTextChanged: (value){
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                    hint: 'Email Address',controller: _emailAddressController),
 
-              AppTextField(
-                  onTextChanged: (value){
-                    setState(() {
-                      email = value;
-                    });
+                SizedBox(height: 20,),
+                AppPasswordField(
+                  hint: "Password",
+                  onTextChanged: (value1) {
+                      setState(() {
+                        password = value1;
+                      });
                   },
-                  hint: 'Email Address',controller: _emailAddressController),
+                ),
 
-              // TextField(
-              //   controller: _emailAddressController,
-              //   onChanged: (value) {
-              //     setState(() {
-              //       email = value;
-              //     });
-              //   },
-              //   decoration: InputDecoration(labelText: 'Email'),
-              // ),
-              SizedBox(height: 20,),
-              AppPasswordField(
-                hint: "Password",
-                onTextChanged: (value1) {
-                    setState(() {
-                      password = value1;
-                    });
-                },
-              ),
-              // TextField(
-              //   onChanged: (value) {
-              //     setState(() {
-              //       password = value;
-              //     });
-              //   },
-              //   obscureText: true,
-              //   decoration: InputDecoration(labelText: 'Password'),
-              // ),
-              SizedBox(height: 50),
-              _isLogging
-                  ? CircularProgressIndicator()
-                  : AppButton(
-                buttonText: 'Login',
-                onTapButton: loginUser,
-              ),
-              // ElevatedButton(
-              //   onPressed: loginUser,
-              //   child: Text('Login'),
-              // ),
-              Spacer(),
-              ElevatedButton(
-                style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(AppColors.textBackgroundColor) ),
-                onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegistrationLoginScreen(),
-                    ),
-                  );
-                },
-                child: Text('Create New Account',style: TextStyle(color: AppColors.fontColorWhite)),
-              ),
-            ],
+                SizedBox(height: 50),
+                _isLogging
+                    ? CircularProgressIndicator()
+                    : AppButton(
+                  buttonText: 'Login',
+                  onTapButton: loginUser,
+                ),
+
+                SizedBox(height: 150),
+                ElevatedButton(
+                  style: ButtonStyle(backgroundColor:MaterialStatePropertyAll(AppColors.textBackgroundColor) ),
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RegistrationLoginScreen(),
+                      ),
+                    );
+                  },
+                  child: Text('Create New Account',style: TextStyle(color: AppColors.fontColorWhite)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

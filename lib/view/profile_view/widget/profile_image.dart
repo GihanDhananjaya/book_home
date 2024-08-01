@@ -9,8 +9,6 @@ import 'package:path/path.dart' as p;
 import '../../../../../utils/app_colors.dart';
 import '../../../common/app_button.dart';
 
-
-
 class ProfileImage extends StatefulWidget {
   final String? url;
   final String title;
@@ -37,7 +35,8 @@ class _ProfileImageState extends State<ProfileImage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(child: Text('Profile image',style: TextStyle(fontSize: 22))),
+          title: const Center(child: Text('Profile image',style: TextStyle(
+              fontSize: 22,color: AppColors.fontColorWhite))),
           content: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -105,6 +104,16 @@ class _ProfileImageState extends State<ProfileImage> {
               backgroundColor: AppColors.colorDisableWidget,
               radius: 65,
               child: _image != null
+              //     ? ClipRRect(
+              //   borderRadius: BorderRadius.circular(100),
+              //   child: Image.file(
+              //     _image!,
+              //     width: 150,
+              //     height: 150,
+              //     fit: BoxFit.cover,
+              //   ),
+              // )
+              //     : widget.url != null
                   ? ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: Image.file(
@@ -114,27 +123,18 @@ class _ProfileImageState extends State<ProfileImage> {
                   fit: BoxFit.cover,
                 ),
               )
-                  : widget.url != null
-                  ? ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  widget.url!,
-                  width: 150,
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              )
-                  : const Icon(Icons.book, size: 50,color: AppColors.fieldBackgroundColor),
+                  : const Icon(Icons.book,
+                  size: 50,color: AppColors.fieldBackgroundColor),
             ),
           ),
           Positioned(
             bottom: 10,
-            right: 5,
+            right: 1,
             child: GestureDetector(
               child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(70),
-                      color: AppColors.colorPrimary),
+                      color: AppColors.fontColorGray),
                   height: 40,
                   width: 40,
                   child: Icon(Icons.add_a_photo)),
@@ -144,13 +144,13 @@ class _ProfileImageState extends State<ProfileImage> {
             ),
           )
         ]),
-
+          SizedBox(height: 10,),
         Center(
           child: Text(widget.title,
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 24,
-                  color: AppColors.fontColorDark)),
+                  color: AppColors.fontColorWhite)),
         ),
       ],
     );

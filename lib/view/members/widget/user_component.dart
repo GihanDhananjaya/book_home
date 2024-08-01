@@ -20,7 +20,7 @@ class UserComponent extends StatelessWidget {
     bool? isFollowing = userEntityList.followed;
     final firstLetter = userEntityList.userName?.isNotEmpty ?? false ? userEntityList.userName!.substring(0, 1).toUpperCase() : 'A';
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0,bottom: 8),
       child: Container(
         height: 70,
         decoration: BoxDecoration(color: AppColors.textBackgroundColor,
@@ -66,7 +66,7 @@ class UserComponent extends StatelessWidget {
                 onTap: onFollow,
                 child: Container(
                   height: 35,
-                  width: 90,
+                  width: 100,
                   decoration: BoxDecoration(
                       color: buttonColor,
                       borderRadius: BorderRadius.circular(20)),
